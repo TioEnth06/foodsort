@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+:root {
+  --forest: #1B4332;
+  --forest-dark: #122E22;
+  --leaf: #40916C;
+  --sage: #D8F3DC;
+  --cream: #FAF8F5;
+  --cream-elevated: #F3EFE6;
+  --charcoal: #1C1F1E;
+  --muted-earth: #525B56;
+}
+
+body {
+  background-color: var(--cream);
+  color: var(--charcoal);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: #D8F3DC;
+  color: #1B4332;
+}
