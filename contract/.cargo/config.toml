@@ -1,0 +1,13 @@
+# CPU & RAM Throttling Configuration for Cargo
+[build]
+jobs = 2
+
+[profile.dev]
+debug = 0
+incremental = true
+codegen-units = 16
+
+[profile.test]
+debug = 0
+incremental = true
+codegen-units = 16

@@ -1,0 +1,29 @@
+{
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/frontend/node_modules/**": true,
+    "**/.next/**": true,
+    "**/frontend/.next/**": true,
+    "**/target/**": true,
+    "**/contract/target/**": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/frontend/node_modules": true,
+    "**/.next": true,
+    "**/frontend/.next": true,
+    "**/target": true,
+    "**/contract/target": true,
+    "**/package-lock.json": true,
+    "**/Cargo.lock": true
+  },
+  "rust-analyzer.checkOnSave": false,
+  "rust-analyzer.cargo.targetDir": true,
+  "rust-analyzer.files.excludeDirs": [
+    "contract/target",
+    "frontend/node_modules",
+    "frontend/.next"
+  ]
+}
