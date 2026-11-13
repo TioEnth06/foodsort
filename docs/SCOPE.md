@@ -14,7 +14,7 @@
 - Views for actions, donations, treasury, NFT verification proof
 - Unit / integration / invariant tests
 
-### App (`src/`)
+### App (`src/` → synced `frontend/` for Vercel)
 - Next.js App Router + TypeScript + Tailwind + Motion
 - Seven pages: `/`, `/actions`, `/actions/[id]`, `/contribute`, `/donor`, `/admin`, `/verify`
 - `/api/upload` (Pinata), `/api/ai/verify`, `/api/ai/audit-log`

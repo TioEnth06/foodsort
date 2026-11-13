@@ -33,12 +33,14 @@ Contributor → Evidence (IPFS) → AI assist → Human admin → On-chain verif
 ```text
 foodsort/
 ├── README.md / HACKATHON.md / AGENTS.md
-├── src/                        # Next.js app (Vercel / local root)
+├── src/                        # Next.js app (local / cloud agent)
+├── frontend/                   # Vercel Root Directory — keep in sync with src/
 ├── contract/                   # Rust NEAR contract (NEP-171/177/181)
 ├── scripts/                    # release tests + testnet deploy
 └── docs/                       # product, architecture, demo, submission
 ```
 
+Edit `src/`, then `node scripts/sync-frontend-src.mjs` before push (release tests also enforce the sync).  
 Doc index: [docs/README.md](docs/README.md).
 
 ### Routes

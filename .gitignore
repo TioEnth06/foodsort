@@ -1,11 +1,14 @@
 # Dependencies
 node_modules/
+frontend/node_modules/
 .pnp
 .pnp.js
 
 # Next.js build output
 .next/
+frontend/.next/
 out/
+frontend/out/
 build/
 
 # Rust / NEAR build output
@@ -19,6 +22,9 @@ contract/target/
 .env
 .env.*
 !.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
 
 # Logs & runtime data
 npm-debug.log*
@@ -26,6 +32,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 .audit-logs/
+frontend/.audit-logs/
 
 # OS & Editor files
 .DS_Store
@@ -33,3 +40,4 @@ yarn-error.log*
 .vercel
 *.tsbuildinfo
 next-env.d.ts
+frontend/next-env.d.ts

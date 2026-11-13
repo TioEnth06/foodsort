@@ -3,13 +3,17 @@
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true,
     "**/node_modules/**": true,
+    "**/frontend/node_modules/**": true,
     "**/.next/**": true,
+    "**/frontend/.next/**": true,
     "**/target/**": true,
     "**/contract/target/**": true
   },
   "search.exclude": {
     "**/node_modules": true,
+    "**/frontend/node_modules": true,
     "**/.next": true,
+    "**/frontend/.next": true,
     "**/target": true,
     "**/contract/target": true,
     "**/package-lock.json": true,
@@ -20,6 +24,8 @@
   "rust-analyzer.files.excludeDirs": [
     "contract/target",
     "node_modules",
-    ".next"
+    "frontend/node_modules",
+    ".next",
+    "frontend/.next"
   ]
 }

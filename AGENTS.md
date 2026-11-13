@@ -19,7 +19,7 @@ Rules for humans and coding agents working in this repo.
 
 ## Repo layout & performance
 
-- App entry: root `src/` (Vercel / Next.js).
+- App source of truth: root `src/`. Vercel Root Directory is `frontend/` — run `node scripts/sync-frontend-src.mjs` after edits (release tests require `src/` ≡ `frontend/src`).
 - Ignore heavy dirs: `node_modules/`, `.next/`, `contract/target/`, `*.wasm`.
 - Respect `contract/.cargo/config.toml` job limits; run heavy builds sequentially.
 - Prefer in-memory near-sdk tests over local validator Docker.

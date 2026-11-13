@@ -27,12 +27,21 @@ console.log("[1/5] Auditing Code Freeze, Scope Boundaries & Secret Protection...
 
 const gitignore = fs.readFileSync(path.join(rootDir, ".gitignore"), "utf8");
 assert.match(gitignore, /\.env\.\*/, ".gitignore must ignore .env.* files");
+assert.match(
+  gitignore,
+  /frontend\/\.env\.\*/,
+  ".gitignore must ignore frontend/.env.* files"
+);
 
 const trackedFiles = execSync("git status --porcelain", { cwd: rootDir, encoding: "utf8" });
 assert.ok(
   !trackedFiles.includes(".env.local"),
   "SECURITY VIOLATION: .env.local must never be tracked by git"
 );
+
+// Vercel Root Directory is `frontend/` — keep it identical to root `src/`.
+execSync("diff -rq src frontend/src", { cwd: rootDir, stdio: "inherit" });
+console.log("✓ frontend/src is in sync with root src/ (Vercel deploy root).\n");
 
 const requiredDocs = [
   "HACKATHON.md",

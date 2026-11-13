@@ -1,6 +1,6 @@
 # System architecture — FoodSort
 
-Live contract: `foodsort-app-86051.testnet` ([TESTNET.md](./TESTNET.md)). App sources live in root `src/`.
+Live contract: `foodsort-app-86051.testnet` ([TESTNET.md](./TESTNET.md)). App sources live in root `src/` (synced to `frontend/` for Vercel).
 
 ## 1. Overview
 
