@@ -1,96 +1,90 @@
-# Live Demo Runbook & 3-Minute Judge Walkthrough — FoodSort
+# Live Demo Runbook — FoodSort (NEAR Testnet)
 
-> **Product**: FoodSort  
-> **Tagline**: *Sort food. Support change. Collect impact.*  
-> **Core Flow**: `Contributor → Food Action + Evidence → AI-Assisted Verification → Human Admin Approval → NEAR On-Chain Verification → Donor Contribution → Donation NFT → Public Verification`
-
-This runbook guides presenters and NEAR Hackathon 2026 judges through a reproducible **3-minute live walkthrough** of **FoodSort**.
-
----
-
-## Pre-Demo Setup (30 Seconds Before Presenting)
-
-1. **Start Frontend Server (or open `https://foodsort.vercel.app`)**:
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-   Open `http://localhost:3000`.
-2. **Environment Keys Check (`frontend/.env.local`)**:
-   - `NEXT_PUBLIC_CONTRACT_ID=foodsort-app-86051.testnet`
-   - `PINATA_JWT=[INSERT PINATA JWT]` (for live IPFS pinning on `/contribute`)
-   - `OPENAI_API_KEY=[INSERT OPENAI API KEY]` or `GEMINI_API_KEY=[INSERT GEMINI API KEY]` (for live AI evidence analysis on `/admin`)
-   - *Graceful Demo Fallback*: If presenting without live external keys or before contract deployment, the top navbar clearly badges `DEMO DATA PREVIEW` for read views, and `/admin` demonstrates graceful manual fallback when AI is unavailable.
+> **Site**: https://foodsort.vercel.app  
+> **Contract**: `foodsort-app-86051.testnet`  
+> **Admin**: `foodsort-app-86051.testnet`  
+> **Explorer**: https://testnet.nearblocks.io/address/foodsort-app-86051.testnet  
+> **Flow**: Contributor → Evidence → AI assist → Human admin → Donate → NFT → Public verify
 
 ---
 
-## 3-Minute Judge Pitch & Walkthrough Script
+## Pre-demo checklist (1 minute)
 
-### 0:00 – 0:30 | Positioning & Truthful Treasury Accounting (`/`)
-1. **Open Homepage (`/`)**:
-   - Introduce **FoodSort**: *"Sort food. Support change. Collect impact. FoodSort is a community-powered food impact platform that connects verified real-world food actions with transparent on-chain donations and Donation NFTs on NEAR."*
-2. **Highlight the Transparent Treasury State Card**:
-   - Point out the explicit separation between:
-     - **Funds Held in Contract Treasury** (`treasury_balance_yocto`, status `HELD_IN_TREASURY`)
-     - **Funds Distributed: `0 NEAR (No Disbursement in MVP)`**
-     - **NEP-171 Storage Reserved** (`total_storage_reserved_yocto`)
-   - Emphasize: *"FoodSort never claims funds have been distributed unless an actual on-chain disbursement exists."*
+1. Open https://foodsort.vercel.app
+2. Navbar badge must say **NEAR testnet** (not Example data)
+3. MyNearWallet set to **Testnet**
+4. Vercel env live: `PINATA_JWT`, `GEMINI_API_KEY`, `AI_PROVIDER=gemini`
+5. Optional soft-connect presets (portfolio preview only):
+   - Contributor/donor sample: `foodsort-contrib-6146.testnet`
+   - Admin: `foodsort-app-86051.testnet`
+6. **Signing real txs** still needs MyNearWallet (or CLI). Soft-connect alone cannot sign.
 
----
+### Current seeded state (approx.)
 
-### 0:30 – 1:10 | Step 1: Contributor Submits Food Action + Evidence (`/contribute`)
-1. **Navigate to `Contribute` (`/contribute`)**:
-   - Click **Connect NEAR Testnet** in the navbar and connect as a contributor (e.g., preset `sari-organik.testnet` or via MyNearWallet Testnet).
-2. **Walk Through the Submission Form**:
-   - Select category: **`COMPOST`** (alongside `FOOD_RESCUE` and `RESIDUAL`).
-   - Select action type: **`Community Market Green Waste Sorting`**.
-   - Enter description (minimum 15 characters in UI / 10 characters in contract).
-   - Select a valid evidence image (`JPEG`, `PNG`, or `WEBP`, up to 10 MB).
-3. **Explain the 2-Step Execution**:
-   - Step 1 uploads the evidence image to **Pinata IPFS** (`POST /api/upload`) and returns `ipfs://<CID>`.
-   - Step 2 calls `submit_action(food_category, action_type, description, evidence_uri)` on the NEAR contract, assigning a unique sequential `action_id` with `status: Pending` and recording `contributor_id = env::predecessor_account_id()`.
+- Verified actions: `#1` COMPOST, `#2` FOOD_RESCUE, `#3` RESIDUAL
+- Rejected: `#4` (shows reject path)
+- NFTs: `foodsort-donation-1`, `foodsort-donation-2`
+- Best donate target for live mint: **`/actions/2`** (verified, open for support)
 
 ---
 
-### 1:10 – 1:55 | Steps 2, 3 & 4: AI-Assisted Verification + Human Admin Approval (`/admin`)
-1. **Navigate to `Admin Review` (`/admin`)**:
-   - Show that while connected as a non-admin (`sari-organik.testnet`), the **Approve / Reject** buttons are locked and backed by `assert_admin()` (`ERR_NOT_ADMIN`) in the Rust contract.
-   - Soft-connect as **`foodsort-app-86051.testnet`** (admin) or sign with MyNearWallet as that account.
-2. **Run AI Verification Assistant (`Prompt #6.5`)**:
-   - On pending Action `#103` (`COMPOST` by `budi-kompos.testnet`) or `#104` (`RESIDUAL` by `warung-hijau.testnet`), click **"Run AI Evidence Analysis"**.
-   - Explain the core governance distinction:
-     - **AI assists verification**: `/api/ai/verify` evaluates the untrusted description, category, and image and returns `recommendation` (`APPROVE` / `REJECT` / `NEEDS_REVIEW`), `confidence_score`, `category_assessment`, `evidence_relevance`, `description_consistency`, `risk_flags`, and `reasoning` with `requires_human_approval: true`.
-     - **AI has zero wallet or private-key access** and never certifies food safety.
-3. **Explicit Human Admin Confirmation & Separate Audit Log**:
-   - Click **Approve (`verify_action`)** (or **Reject** / **Request Additional Evidence**).
-   - Show the **Confirm On-Chain Human Admin Decision** modal comparing the prior AI recommendation against the human admin's decision.
-   - Point out the **Separate AI Recommendations & Human Admin Audit Log** section (`POST /api/ai/audit-log`), which logs `AI_RECOMMENDATION` and `HUMAN_ADMIN_DECISION` as distinct records.
+## 3-minute judge walkthrough
+
+### 0:00–0:30 — Home (`/`)
+
+- Pitch: *Sort food. Support change. Keep the credit honest.*
+- Point to **Live treasury**: funds **held**, distributed **0 NEAR**
+- Emphasize: never claim funds are distributed in this MVP
+
+### 0:30–1:10 — Contribute (`/contribute`)
+
+1. Connect MyNearWallet (Testnet) as your contributor account
+2. Category: `COMPOST` / `FOOD_RESCUE` / `RESIDUAL`
+3. Upload evidence photo → IPFS via Pinata
+4. Submit → on-chain `submit_action` → status **Pending**
+
+### 1:10–1:55 — Admin + AI (`/admin`)
+
+1. Show non-admin cannot approve (contract `assert_admin`)
+2. Connect/sign as **`foodsort-app-86051.testnet`**
+3. Click **Run AI Evidence Analysis** on a pending action
+   - AI returns recommendation + `requires_human_approval: true`
+   - AI has **no wallet / no keys**
+4. Human clicks Approve → `verify_action` (or Reject → `reject_action`)
+
+### 1:55–2:30 — Donate + mint (`/actions/2`)
+
+1. Open a **Verified** action (prefer `#2`)
+2. Connect donor wallet (can be same or different testnet account)
+3. Donate ≥ ~0.12 NEAR → `donate_and_mint`
+4. Show minted certificate id `foodsort-donation-N`
+5. Optional: open `/donor` with that wallet to see owned certificates
+
+### 2:30–3:00 — Public verify (`/verify/foodsort-donation-1`)
+
+1. Disconnect wallet — verification stays public
+2. Show three roles stay distinct:
+   - Original contributor
+   - Original donor
+   - Current owner
+3. Close: *AI assists, humans decide, NEAR records attribution forever.*
 
 ---
 
-### 1:55 – 2:30 | Steps 5 & 6: Donor Contribution & Donation NFT Minting (`/actions/101` & `/donor`)
-1. **Navigate to `Explore Actions` (`/actions`) -> Action `#101` (`/actions/101`)**:
-   - Note that only `Verified` actions can receive donations (`Pending` and `Rejected` actions are blocked by the contract with `ERR_ACTION_NOT_VERIFIED`).
-   - Point out the **Original Action Contributor** card (`sari-organik.testnet`).
-   - In the **Support Verified Action & Mint NFT** panel, select `1 NEAR` or `2.5 NEAR`.
-   - Highlight how `donate_and_mint(action_id)` works on-chain:
-     - Reads `contributor_id` strictly from the verified action in contract storage (never from frontend parameters).
-     - Deducts exact NEP-171 storage byte cost (`storage_cost_yocto`) from the attached deposit using checked `u128` integer arithmetic.
-     - Credits `net_treasury_amount_yocto` to `treasury_balance_yocto` (`HELD_IN_TREASURY`).
-     - Mints NEP-171 certificate `foodsort-donation-{id}` to the donor.
-2. **Navigate to `Donor Hub` (`/donor`)**:
-   - Connect preset `green-patron.testnet` to show the donor's owned NEP-171 certificates (`nft_tokens_for_owner`) and donation ledger.
-   - Switch to `empty-wallet.testnet` to demonstrate strict portfolio isolation (an unconnected or empty wallet never displays another user's private NFT gallery).
+## If something breaks mid-demo
+
+| Issue | Fallback |
+| --- | --- |
+| AI API error | Continue with manual admin review (allowed) |
+| Upload fails | Use an existing `https://...` image URL if form allows, or show prior action |
+| Wallet reject | Soft-connect + show existing verified action `#1`/`#2` and `/verify` |
+| Need fresh pending action | Submit one quickly on `/contribute`, or use CLI seed |
 
 ---
 
-### 2:30 – 3:00 | Step 7: Walletless Public Verification & 3-Party Provenance (`/verify/foodsort-donation-2`)
-1. **Navigate to `/verify/foodsort-donation-2` (or click `foodsort-donation-2` on `/verify`)**:
-   - Click the **Disconnect Wallet** button in the navbar to show that public verification works **100% without a wallet**.
-2. **Highlight the Three-Party Cryptographic Provenance Card**:
-   - Point out the three distinct accounts returned by `get_nft_verification_proof("foodsort-donation-2")`:
-     1. **1. Original Contributor (`sari-organik.testnet`)** — Performed the physical food-sorting action (`Action #101`).
-     2. **2. Original Donor (`eco-dao-member.testnet`)** — Funded the donation and originally minted the NFT.
-     3. **3. Current NFT Owner (`impact-collector.testnet`)** — Current NEP-171 holder after secondary transfer (`Transferred After Mint (Secondary Holder)`).
-3. **Closing Statement**:
-   - *"With FoodSort on NEAR, AI assists verification, human admins make the final verification decision, the smart contract enforces authorization and treasury accounting on-chain, and every Donation NFT permanently preserves original contributor attribution."*
+## Useful links
+
+- App: https://foodsort.vercel.app
+- Verify example: https://foodsort.vercel.app/verify/foodsort-donation-1
+- Action to donate: https://foodsort.vercel.app/actions/2
+- Testnet notes: `docs/TESTNET.md`

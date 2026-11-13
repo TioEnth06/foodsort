@@ -13,11 +13,13 @@
 
 Frontend default (`NEXT_PUBLIC_CONTRACT_ID`) points at this contract. When RPC succeeds, the UI uses live on-chain data (not example/demo records).
 
-## Seeded state (initial)
+## Seeded / live demo state
 
-- 2 verified actions (`COMPOST`, `FOOD_RESCUE`)
-- 1 donation NFT: `foodsort-donation-1`
-- Treasury holds net donation; funds distributed = 0
+- Verified: `#1` COMPOST, `#2` FOOD_RESCUE, `#3` RESIDUAL
+- Rejected: `#4` (reject-path demo)
+- NFTs: `foodsort-donation-1`, `foodsort-donation-2`
+- Treasury holds net donations; funds distributed = 0
+- Prefer `/actions/2` for a live donate+mint during demos
 
 ## How to use as a tester
 
