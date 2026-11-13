@@ -6,31 +6,24 @@ import { ArrowUpRight } from "lucide-react";
 export function Footer() {
   return (
     <footer className="border-t border-[#102A1F]/15 bg-[#0C1712] text-[#F5F2E9]">
-      <div className="mx-auto max-w-[1440px] px-4 py-16 sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-[1440px] px-5 py-16 sm:px-10 lg:px-16">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 pb-12 border-b border-white/10">
           <div className="lg:col-span-6 space-y-4">
-            <div className="flex items-baseline gap-3">
-              <span className="text-2xl font-extrabold tracking-[-0.04em] text-[#F5F2E9]">
-                FoodSort
-              </span>
-              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#C7F36B]">
-                Verified Food Impact on NEAR
-              </span>
-            </div>
+            <span className="text-2xl font-extrabold tracking-[-0.04em] text-[#F5F2E9]">
+              FoodSort
+            </span>
             <p className="text-xl sm:text-2xl font-semibold tracking-[-0.02em] text-[#F5F2E9]/90 max-w-md">
-              Sort food — Support change — Collect impact
+              Sort food. Support change. Keep the credit honest.
             </p>
-            <p className="text-xs font-mono text-[#F5F2E9]/60 max-w-lg leading-relaxed">
-              Verified food impact, made visible — Original contributor
-              attribution is permanently preserved on-chain, and 100% of net
-              donations remain transparently held in the contract treasury (
-              <span className="text-[#C7F36B]">HELD_IN_TREASURY</span>)
+            <p className="text-sm text-[#F5F2E9]/65 max-w-lg leading-relaxed">
+              Verified food impact on NEAR — original contributors stay named,
+              and donations remain held in the contract treasury
             </p>
           </div>
 
           <div className="lg:col-span-3 space-y-3">
-            <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#F5F2E9]/45">
-              Navigation
+            <div className="text-xs uppercase tracking-[0.12em] text-[#F5F2E9]/45">
+              Navigate
             </div>
             <ul className="space-y-2.5 text-sm font-medium text-[#F5F2E9]/85">
               <li>
@@ -77,51 +70,40 @@ export function Footer() {
           </div>
 
           <div className="lg:col-span-3 space-y-3">
-            <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#F5F2E9]/45">
-              Protocol & Standards
+            <div className="text-xs uppercase tracking-[0.12em] text-[#F5F2E9]/45">
+              Built on NEAR
             </div>
-            <div className="flex flex-wrap gap-2 font-mono text-xs">
-              {["NEAR Testnet", "NEP-171", "NEP-177", "NEP-181"].map((spec) => (
-                <span
-                  key={spec}
-                  className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[#F5F2E9]/85"
-                >
-                  {spec}
-                </span>
-              ))}
-            </div>
-            <div className="pt-2 space-y-1.5 font-mono text-xs text-[#F5F2E9]/65">
-              <div>Contract: {NEAR_CONFIG.contractId}</div>
-              <div className="flex flex-wrap gap-4 pt-1">
-                <a
-                  href={`${NEAR_CONFIG.explorerUrl}/address/${NEAR_CONFIG.contractId}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-1 text-[#C7F36B] hover:underline"
-                >
-                  NEAR Explorer
-                  <ArrowUpRight className="h-3.5 w-3.5" />
-                </a>
-                <a
-                  href="https://github.com/TioEnth06/foodsort"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-1 text-[#F5F2E9]/85 hover:text-[#C7F36B] hover:underline"
-                >
-                  GitHub Repository
-                  <ArrowUpRight className="h-3.5 w-3.5" />
-                </a>
-              </div>
+            <p className="text-sm text-[#F5F2E9]/70 leading-relaxed">
+              Testnet contract
+              <br />
+              <span className="text-[#F5F2E9]/90">{NEAR_CONFIG.contractId}</span>
+            </p>
+            <div className="flex flex-wrap gap-4 pt-1 text-sm">
+              <a
+                href={`${NEAR_CONFIG.explorerUrl}/address/${NEAR_CONFIG.contractId}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 text-[#C7F36B] hover:underline"
+              >
+                Explorer
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </a>
+              <a
+                href="https://github.com/TioEnth06/foodsort"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 text-[#F5F2E9]/85 hover:text-[#C7F36B] hover:underline"
+              >
+                GitHub
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </a>
             </div>
           </div>
         </div>
 
-        <div className="pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-[11px] text-[#F5F2E9]/50">
-          <div>FoodSort • NEAR Hackathon 2026</div>
-          <div>
-            Contributor → Verification → Support → Donation NFT → Public
-            Provenance
-          </div>
+        <div className="pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#F5F2E9]/50">
+          <div>FoodSort · NEAR Hackathon 2026</div>
+          <div>Contributor → Verify → Support → Certificate → Public record</div>
         </div>
       </div>
     </footer>
