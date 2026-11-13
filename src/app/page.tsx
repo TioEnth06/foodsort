@@ -63,8 +63,7 @@ const SUPPORT_STORY = [
 ];
 
 export default function HomePage() {
-  const { actions, donations, nftTokens, treasury, isUsingDemoData } =
-    useNearWallet();
+  const { actions, donations, nftTokens, treasury } = useNearWallet();
 
   const [activeStory, setActiveStory] = useState(2);
 
@@ -93,28 +92,14 @@ export default function HomePage() {
         </div>
 
         <div className="relative z-10 mx-auto w-full max-w-[1440px] px-5 pb-16 pt-28 sm:px-10 lg:px-16">
-          {isUsingDemoData && (
-            <p className="mb-4 text-sm text-[#F5F2E9]/70">
-              Preview mode — sample records shown while the live chain loads
-            </p>
-          )}
-
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45 }}
-            className="text-sm font-medium tracking-[0.08em] uppercase text-[#C7F36B]"
-          >
-            FoodSort
-          </motion.p>
-
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.05 }}
-            className="mt-3 max-w-4xl font-extrabold tracking-[-0.04em] text-[#F5F2E9] leading-[0.95]"
+            transition={{ duration: 0.55 }}
+            className="max-w-4xl font-extrabold tracking-[-0.04em] text-[#F5F2E9] leading-[0.95]"
             style={{ fontSize: "clamp(2.8rem, 7.5vw, 6.5rem)" }}
           >
+            <span className="block text-[#C7F36B]">FoodSort</span>
             Sort food.
             <br />
             Support change.
@@ -513,7 +498,7 @@ export default function HomePage() {
                   </p>
                 </div>
                 {primaryDonation?.is_demo_data && (
-                  <span className="text-xs text-[#18211C]/60">Sample record</span>
+                  <span className="text-xs text-[#18211C]/55">Example</span>
                 )}
               </div>
 
