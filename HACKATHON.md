@@ -6,7 +6,7 @@
 - **Tagline**: *Sort food. Support change. Collect impact.*
 - **One-line Description**: FoodSort is a community-powered food impact platform that connects verified real-world food actions with transparent on-chain donations and Donation NFTs.
 - **Repository**: [https://github.com/TioEnth06/foodsort.git](https://github.com/TioEnth06/foodsort.git)
-- **Live Demo URL**: `[INSERT LIVE DEMO URL]`
+- **Live Demo URL**: [https://foodsort.vercel.app](https://foodsort.vercel.app)
 - **Demo Video URL**: `[INSERT DEMO VIDEO URL]`
 - **NEAR Testnet Contract Address**: `[INSERT ACTUAL CONTRACT ADDRESS]` (configured default in code: `foodsort.testnet`)
 

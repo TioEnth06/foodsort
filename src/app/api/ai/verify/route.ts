@@ -191,7 +191,38 @@ CRITICAL SECURITY & POLICY CONSTRAINTS:
       const content = completion.choices?.[0]?.message?.content || "{}";
       rawJsonResult = JSON.parse(content) as Record<string, unknown>;
     } else {
-      modelUsed = process.env.AI_MODEL || "gemini-2.0-flash";
+      modelUsed =
+        process.env.AI_MODEL && !process.env.AI_MODEL.startsWith("gpt-")
+          ? process.env.AI_MODEL
+          : "gemini-2.0-flash";
+
+      const parts: Array<Record<string, unknown>> = [
+        {
+          text: `Analyze this untrusted food-sorting submission and evidence image (${resolvedImageUrl}):\n${untrustedUserPayload}`,
+        },
+      ];
+
+      // Attempt to fetch evidence image bytes (up to 4 MB) so Gemini Vision can inspect visual content
+      try {
+        const imgRes = await fetch(resolvedImageUrl);
+        if (imgRes.ok) {
+          const contentType =
+            imgRes.headers.get("content-type")?.split(";")[0]?.trim() ||
+            "image/jpeg";
+          const arrayBuf = await imgRes.arrayBuffer();
+          if (arrayBuf.byteLength > 0 && arrayBuf.byteLength <= 4 * 1024 * 1024) {
+            parts.push({
+              inlineData: {
+                mimeType: contentType,
+                data: Buffer.from(arrayBuf).toString("base64"),
+              },
+            });
+          }
+        }
+      } catch {
+        // Proceed with URI + metadata analysis if remote image fetch times out
+      }
+
       const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelUsed}:generateContent?key=${geminiKey}`;
       const response = await fetch(geminiUrl, {
         method: "POST",
@@ -205,11 +236,7 @@ CRITICAL SECURITY & POLICY CONSTRAINTS:
           contents: [
             {
               role: "user",
-              parts: [
-                {
-                  text: `Analyze this untrusted food-sorting submission and evidence URI (${resolvedImageUrl}):\n${untrustedUserPayload}`,
-                },
-              ],
+              parts,
             },
           ],
         }),
