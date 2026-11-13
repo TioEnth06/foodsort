@@ -14,7 +14,7 @@
 - Views for actions, donations, treasury, NFT verification proof
 - Unit / integration / invariant tests
 
-### App (`src/` root; mirrored under `frontend/`)
+### App (`src/`)
 - Next.js App Router + TypeScript + Tailwind + Motion
 - Seven pages: `/`, `/actions`, `/actions/[id]`, `/contribute`, `/donor`, `/admin`, `/verify`
 - `/api/upload` (Pinata), `/api/ai/verify`, `/api/ai/audit-log`

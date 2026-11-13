@@ -27,7 +27,6 @@ console.log("[1/5] Auditing Code Freeze, Scope Boundaries & Secret Protection...
 
 const gitignore = fs.readFileSync(path.join(rootDir, ".gitignore"), "utf8");
 assert.match(gitignore, /\.env\.\*/, ".gitignore must ignore .env.* files");
-assert.match(gitignore, /frontend\/\.env\.\*/, ".gitignore must ignore frontend/.env.* files");
 
 const trackedFiles = execSync("git status --porcelain", { cwd: rootDir, encoding: "utf8" });
 assert.ok(
@@ -72,19 +71,19 @@ console.log("");
 console.log("[3/5] Running AI Verification Assistant Tests (Cases A, B, C, D)...");
 
 const aiVerifyRoute = fs.readFileSync(
-  path.join(rootDir, "frontend/src/app/api/ai/verify/route.ts"),
+  path.join(rootDir, "src/app/api/ai/verify/route.ts"),
   "utf8"
 );
 const aiSchemaFile = fs.readFileSync(
-  path.join(rootDir, "frontend/src/lib/ai/verification-schema.ts"),
+  path.join(rootDir, "src/lib/ai/verification-schema.ts"),
   "utf8"
 );
 const auditLogRoute = fs.readFileSync(
-  path.join(rootDir, "frontend/src/app/api/ai/audit-log/route.ts"),
+  path.join(rootDir, "src/app/api/ai/audit-log/route.ts"),
   "utf8"
 );
 const uploadRoute = fs.readFileSync(
-  path.join(rootDir, "frontend/src/app/api/upload/route.ts"),
+  path.join(rootDir, "src/app/api/upload/route.ts"),
   "utf8"
 );
 
@@ -197,7 +196,7 @@ console.log("✓ AI Verification Cases A, B, C, D and isolation guardrails verif
 console.log("[4/5] Verifying Integer yoctoNEAR Accounting & Public Verification Routes...");
 
 const utilsTs = fs.readFileSync(
-  path.join(rootDir, "frontend/src/lib/utils.ts"),
+  path.join(rootDir, "src/lib/utils.ts"),
   "utf8"
 );
 assert.ok(
@@ -206,8 +205,8 @@ assert.ok(
   "parseNearToYocto must validate strict decimal format without floating-point arithmetic"
 );
 assert.ok(
-  fs.existsSync(path.join(rootDir, "frontend/src/app/verify/page.tsx")) &&
-    fs.existsSync(path.join(rootDir, "frontend/src/app/verify/[tokenId]/page.tsx")),
+  fs.existsSync(path.join(rootDir, "src/app/verify/page.tsx")) &&
+    fs.existsSync(path.join(rootDir, "src/app/verify/[tokenId]/page.tsx")),
   "Both /verify and /verify/[tokenId] public verification routes must exist"
 );
 

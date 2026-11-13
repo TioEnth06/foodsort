@@ -57,7 +57,7 @@ Grassroots food sorting (compost diversion, surplus rescue, residual separation)
 | Layer | Tech | Paths |
 | --- | --- | --- |
 | Contract | Rust near-sdk 5.5 + NEP-171/177/181 | `contract/src/` |
-| App | Next.js 15.5 App Router, React 19, Tailwind v4, Motion | `src/` (root; mirrored in `frontend/`) |
+| App | Next.js 15.5 App Router, React 19, Tailwind v4, Motion | `src/` |
 | NEAR client | JSON-RPC views + MyNearWallet | `src/lib/near/` |
 | IPFS | Pinata via `/api/upload` | `src/app/api/upload/` |
 | AI | Gemini (default) / OpenAI vision + audit log | `src/app/api/ai/` |

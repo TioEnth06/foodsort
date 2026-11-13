@@ -1,16 +1,11 @@
 # Dependencies
-node_modules
 node_modules/
-frontend/node_modules
-frontend/node_modules/
 .pnp
 .pnp.js
 
 # Next.js build output
 .next/
-frontend/.next/
 out/
-frontend/out/
 build/
 
 # Rust / NEAR build output
@@ -20,20 +15,17 @@ contract/target/
 **/*.rlib
 **/*.rmeta
 
-# Environment variables & secrets (Frozen: never commit keys)
+# Environment variables & secrets (never commit keys)
 .env
 .env.*
 !.env.example
-frontend/.env
-frontend/.env.*
-!frontend/.env.example
 
 # Logs & runtime data
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
-frontend/.audit-logs/
+.audit-logs/
 
 # OS & Editor files
 .DS_Store

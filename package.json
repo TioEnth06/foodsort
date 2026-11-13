@@ -7,7 +7,7 @@
     "build": "NEXT_TELEMETRY_DISABLED=1 next build",
     "start": "NEXT_TELEMETRY_DISABLED=1 next start",
     "typecheck": "tsc --noEmit",
-    "lint": "node frontend/scripts/lint-check.mjs && tsc --noEmit",
+    "lint": "node scripts/lint-check.mjs && tsc --noEmit",
     "test": "node scripts/run-release-tests.mjs"
   },
   "dependencies": {

@@ -1,6 +1,6 @@
 # System architecture — FoodSort
 
-Live contract: `foodsort-app-86051.testnet` ([TESTNET.md](./TESTNET.md)). App sources live in root `src/` (mirrored under `frontend/`).
+Live contract: `foodsort-app-86051.testnet` ([TESTNET.md](./TESTNET.md)). App sources live in root `src/`.
 
 ## 1. Overview
 

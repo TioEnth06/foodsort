@@ -37,9 +37,6 @@ import { Badge } from "@/components/ui/badge";
 import { ExternalLink, ShieldCheck, Wallet } from "lucide-react";
 
 const WALLET_STORAGE_KEY = "foodsort_near_testnet_account_id";
-const DATA_MODE_STORAGE_KEY = "foodsort_data_mode_preference";
-
-export type DataSourceMode = "live_or_fallback" | "demo_only";
 
 export interface ContractCallParams {
   methodName: string;
@@ -75,7 +72,6 @@ interface NearAppContextValue {
   isLoadingChain: boolean;
   chainConnectionError: string | null;
   refreshChainData: () => Promise<void>;
-  toggleDemoPreviewMode: (forceDemo: boolean) => void;
 }
 
 const NearAppContext = createContext<NearAppContextValue | undefined>(
@@ -116,7 +112,6 @@ export function NearWalletProvider({
     DEMO_TREASURY_SUMMARY
   );
   const [isUsingDemoData, setIsUsingDemoData] = useState<boolean>(true);
-  const [forceDemoMode, setForceDemoMode] = useState<boolean>(false);
   const [isLoadingChain, setIsLoadingChain] = useState<boolean>(false);
   const [chainConnectionError, setChainConnectionError] = useState<
     string | null
@@ -128,10 +123,6 @@ export function NearWalletProvider({
     if (typeof window === "undefined") return;
 
     const savedAccount = window.localStorage.getItem(WALLET_STORAGE_KEY);
-    const savedMode = window.localStorage.getItem(DATA_MODE_STORAGE_KEY);
-    if (savedMode === "demo_only") {
-      setForceDemoMode(true);
-    }
 
     const url = new URL(window.location.href);
     const callbackAccountId = url.searchParams.get("account_id");
@@ -188,16 +179,6 @@ export function NearWalletProvider({
   }, []);
 
   const refreshChainData = useCallback(async () => {
-    if (forceDemoMode) {
-      setActions(DEMO_ACTIONS);
-      setDonations(DEMO_DONATIONS);
-      setNftTokens(DEMO_NFT_TOKENS);
-      setTreasury(DEMO_TREASURY_SUMMARY);
-      setIsUsingDemoData(true);
-      setChainConnectionError(null);
-      return;
-    }
-
     setIsLoadingChain(true);
     try {
       const [chainSummary, chainActions, chainTokens] = await Promise.all([
@@ -253,21 +234,11 @@ export function NearWalletProvider({
     } finally {
       setIsLoadingChain(false);
     }
-  }, [accountId, forceDemoMode]);
+  }, [accountId]);
 
   useEffect(() => {
     void refreshChainData();
   }, [refreshChainData]);
-
-  const toggleDemoPreviewMode = useCallback((forceDemo: boolean) => {
-    setForceDemoMode(forceDemo);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(
-        DATA_MODE_STORAGE_KEY,
-        forceDemo ? "demo_only" : "live_or_fallback"
-      );
-    }
-  }, []);
 
   const connectWithMyNearWallet = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -441,7 +412,6 @@ export function NearWalletProvider({
       isLoadingChain,
       chainConnectionError,
       refreshChainData,
-      toggleDemoPreviewMode,
     }),
     [
       accountId,
@@ -459,7 +429,6 @@ export function NearWalletProvider({
       isLoadingChain,
       chainConnectionError,
       refreshChainData,
-      toggleDemoPreviewMode,
     ]
   );
 
@@ -469,20 +438,18 @@ export function NearWalletProvider({
       <Dialog
         open={isWalletModalOpen}
         onClose={() => setIsWalletModalOpen(false)}
-        title="Connect NEAR Testnet Wallet"
-        description={`Target Contract: ${NEAR_CONFIG.contractId} (${NEAR_CONFIG.networkId})`}
+        title="Connect NEAR Testnet"
+        description={`Contract ${NEAR_CONFIG.contractId}`}
       >
         <div className="space-y-4">
           <div className="rounded-xl border border-[#40916C]/30 bg-[#D8F3DC]/40 p-3.5 text-xs text-[#1B4332]">
             <div className="flex items-center gap-2 font-semibold">
               <ShieldCheck className="h-4 w-4 shrink-0" />
-              Real NEAR Testnet Integration
+              MyNearWallet signs real testnet transactions
             </div>
             <p className="mt-1 text-[#1C1F1E]/80">
-              FoodSort never simulates fake blockchain transactions. Connect via{" "}
-              <strong>MyNearWallet Testnet</strong> redirect or enter your
-              NEAR Testnet account ID to inspect role-specific dashboards and
-              sign transactions with an injected Testnet wallet.
+              Soft-connect below only previews dashboards. Writes never invent
+              fake transaction hashes.
             </p>
           </div>
 
@@ -494,14 +461,14 @@ export function NearWalletProvider({
           >
             <span className="flex items-center gap-2">
               <Wallet className="h-4 w-4" />
-              Connect with MyNearWallet (Testnet Redirect)
+              MyNearWallet (Testnet)
             </span>
             <ExternalLink className="h-4 w-4 opacity-80" />
           </Button>
 
           <div className="relative py-1 text-center">
             <span className="bg-[#FAF8F5] px-2 text-xs uppercase tracking-wider text-[#525B56]">
-              Or Connect Testnet Account ID
+              Or soft-connect account ID
             </span>
           </div>
 
@@ -513,7 +480,7 @@ export function NearWalletProvider({
             className="space-y-3"
           >
             <Input
-              placeholder={`e.g. alice.testnet or ${NEAR_CONFIG.contractId}`}
+              placeholder={`e.g. ${NEAR_CONFIG.contractId}`}
               value={accountInput}
               onChange={(e) => setAccountInput(e.target.value)}
             />
@@ -523,9 +490,6 @@ export function NearWalletProvider({
               </p>
             )}
             <div className="flex flex-wrap gap-1.5 pt-1">
-              <span className="text-[11px] text-[#525B56] self-center mr-1">
-                Live testnet presets:
-              </span>
               {[
                 {
                   label: "Contributor / donor",
@@ -543,17 +507,13 @@ export function NearWalletProvider({
                     variant="neutral"
                     className="hover:bg-[#D8F3DC] hover:text-[#1B4332] transition-colors"
                   >
-                    {preset.label}: {preset.id}
+                    {preset.label}
                   </Badge>
                 </button>
               ))}
             </div>
-            <p className="text-[11px] text-[#525B56] leading-relaxed">
-              Soft-connect shows portfolio views. Signing transactions still
-              requires MyNearWallet on testnet.
-            </p>
             <Button type="submit" variant="secondary" className="w-full">
-              Connect NEAR Testnet Account
+              Soft-connect account
             </Button>
           </form>
         </div>

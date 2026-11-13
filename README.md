@@ -34,7 +34,6 @@ Contributor → Evidence (IPFS) → AI assist → Human admin → On-chain verif
 foodsort/
 ├── README.md / HACKATHON.md / AGENTS.md
 ├── src/                        # Next.js app (Vercel / local root)
-├── frontend/                   # Mirror package (same app sources)
 ├── contract/                   # Rust NEAR contract (NEP-171/177/181)
 ├── scripts/                    # release tests + testnet deploy
 └── docs/                       # product, architecture, demo, submission

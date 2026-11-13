@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 /**
- * Lightweight, zero-overhead static linter for FoodSort frontend source files.
+ * Lightweight, zero-overhead static linter for FoodSort TypeScript/React source files.
  * Checks for:
  * - Accidentally exposed secrets or private keys
  * - Unsafe eval / Function constructors

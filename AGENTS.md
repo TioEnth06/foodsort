@@ -19,7 +19,7 @@ Rules for humans and coding agents working in this repo.
 
 ## Repo layout & performance
 
-- App entry: root `src/` (Vercel). Keep `frontend/` in sync when editing app code.
+- App entry: root `src/` (Vercel / Next.js).
 - Ignore heavy dirs: `node_modules/`, `.next/`, `contract/target/`, `*.wasm`.
 - Respect `contract/.cargo/config.toml` job limits; run heavy builds sequentially.
 - Prefer in-memory near-sdk tests over local validator Docker.

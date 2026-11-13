@@ -55,4 +55,4 @@ AI_PROVIDER=gemini
 AI_MODEL=gemini-3.6-flash    # optional override
 ```
 
-Copy root `.env.example` → `.env.local` for local runs. See also `frontend/.env.example` (mirror package).
+Copy root `.env.example` → `.env.local` for local runs.
