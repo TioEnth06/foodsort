@@ -5,29 +5,34 @@
 | Item | Value |
 | --- | --- |
 | Network | `testnet` |
-| Contract | `foodsort-app-86051.testnet` |
-| Admin | `foodsort-app-86051.testnet` |
-| Seeded contributor | `foodsort-contrib-6146.testnet` |
+| Contract / admin | `foodsort-app-86051.testnet` |
+| Seeded contributor / donor | `foodsort-contrib-6146.testnet` |
+| App | https://foodsort.vercel.app |
 | Explorer | https://testnet.nearblocks.io/address/foodsort-app-86051.testnet |
-| Deploy tx | https://explorer.testnet.near.org/transactions/Ggp3QYyBLZadbKsBpa1LrwyF8oeYyPLjbHyRMYPKKpQP |
+| Deploy tx | https://testnet.nearblocks.io/txns/Ggp3QYyBLZadbKsBpa1LrwyF8oeYyPLjbHyRMYPKKpQP |
 
-Frontend default (`NEXT_PUBLIC_CONTRACT_ID`) points at this contract. When RPC succeeds, the UI uses live on-chain data (not example/demo records).
+Frontend default (`NEXT_PUBLIC_CONTRACT_ID`) points at this contract. When RPC succeeds, the UI uses live on-chain data. Soft-connect presets only preview portfolio views — signing still needs MyNearWallet (Testnet).
 
-## Seeded / live demo state
+## Seeded state
 
-- Verified: `#1` COMPOST, `#2` FOOD_RESCUE, `#3` RESIDUAL
-- Rejected: `#4` (reject-path demo)
-- NFTs: `foodsort-donation-1`, `foodsort-donation-2`
-- Treasury holds net donations; funds distributed = 0
-- Prefer `/actions/2` for a live donate+mint during demos
+| Kind | IDs |
+| --- | --- |
+| Verified | `#1` COMPOST, `#2` FOOD_RESCUE, `#3` RESIDUAL |
+| Rejected | `#4` |
+| NFTs | `foodsort-donation-1`, `foodsort-donation-2` |
+| Treasury | Net donations held; `funds_distributed_yocto = 0` |
 
-## How to use as a tester
+Prefer **`/actions/2`** for a live donate + mint (verified, open for support).  
+Public verify example: `/verify/foodsort-donation-1`.
 
-1. Open https://foodsort.vercel.app (or local `npm run dev`)
-2. Confirm navbar badge says **NEAR testnet** (not Example data)
-3. Connect with **MyNearWallet (Testnet)** for real signed transactions
-4. Soft-connect presets only preview portfolio views; signing still needs MyNearWallet
-5. Admin actions (`verify_action` / `reject_action`) must be signed by `foodsort-app-86051.testnet`
+## Tester checklist
+
+1. Open https://foodsort.vercel.app (or `npm run dev` from repo root)
+2. Navbar badge says **NEAR testnet** (not Example data)
+3. Connect **MyNearWallet → Testnet** for real txs
+4. Admin `verify_action` / `reject_action` must be signed by `foodsort-app-86051.testnet`
+
+Full walkthrough: [DEMO-RUNBOOK.md](./DEMO-RUNBOOK.md).
 
 ## Redeploy
 
@@ -37,13 +42,17 @@ ADMIN_ID=foodsort-app-86051.testnet \
 bash scripts/deploy-near-testnet.sh
 ```
 
-Requires Rust (`wasm32-unknown-unknown`) and `near-cli-rs`, plus credentials for the contract account in `~/.near-credentials/testnet/`.
+Needs Rust (`wasm32-unknown-unknown`), `near-cli-rs`, and credentials in `~/.near-credentials/testnet/`.
 
-## Vercel env
+## Vercel / local env
 
-Set at least:
+```bash
+NEXT_PUBLIC_CONTRACT_ID=foodsort-app-86051.testnet
+NEXT_PUBLIC_NEAR_NETWORK=testnet
+PINATA_JWT=…                 # upload
+GEMINI_API_KEY=…             # AI advisory
+AI_PROVIDER=gemini
+AI_MODEL=gemini-3.6-flash    # optional override
+```
 
-- `NEXT_PUBLIC_CONTRACT_ID=foodsort-app-86051.testnet`
-- `NEXT_PUBLIC_NEAR_NETWORK=testnet`
-- `PINATA_JWT` (upload)
-- `GEMINI_API_KEY` (AI advisory)
+Copy root `.env.example` → `.env.local` for local runs. See also `frontend/.env.example` (mirror package).

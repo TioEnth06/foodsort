@@ -1,8 +1,10 @@
-# Product Requirements Document (PRD) — FoodSort
+# Product requirements — FoodSort
 
-## 1. Executive Summary
+Live deployment notes: [TESTNET.md](./TESTNET.md) · Judge script: [DEMO-RUNBOOK.md](./DEMO-RUNBOOK.md).
 
-**FoodSort** is a decentralized environmental action verification and patronage application on **NEAR Protocol**. It enables individuals, community kitchens, and local markets to document real-world food-sorting actions (`COMPOST`, `FOOD_RESCUE`, `RESIDUAL`), have those actions verified on-chain by an authorized administrator (assisted by an advisory AI verification module), and receive transparent native NEAR patronage from donors who are issued verifiable **NEP-171 Donation NFTs**.
+## 1. Summary
+
+**FoodSort** verifies real-world food-sorting actions (`COMPOST`, `FOOD_RESCUE`, `RESIDUAL`) on **NEAR**, with advisory AI triage, human admin approval, transparent native-NEAR patronage, and **NEP-171 Donation NFTs** that keep contributor attribution honest.
 
 ---
 

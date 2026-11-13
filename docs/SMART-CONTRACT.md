@@ -1,13 +1,12 @@
-# NEAR Smart Contract & NFT Metadata Specification — FoodSort
+# Smart contract & NFT metadata — FoodSort
 
-## 1. Standards & Crate Dependencies
+Deployed testnet account: `foodsort-app-86051.testnet` ([TESTNET.md](./TESTNET.md)).
+
+## 1. Standards & crates
 
 - **Language**: Rust (`edition = "2021"`)
 - **SDK**: `near-sdk = "5.5.0"`, `near-contract-standards = "5.5.0"`
-- **Implemented Standards**:
-  - **NEP-171**: Non-Fungible Token Core (`nft_token`, `nft_transfer`, `nft_transfer_call`, `nft_resolve_transfer`)
-  - **NEP-177**: Non-Fungible Token Metadata (`nft_metadata`, `TokenMetadata`)
-  - **NEP-181**: Non-Fungible Token Enumeration (`nft_total_supply`, `nft_tokens`, `nft_supply_for_owner`, `nft_tokens_for_owner`)
+- **Standards**: NEP-171 (core), NEP-177 (metadata), NEP-181 (enumeration)
 
 ---
 
@@ -83,7 +82,7 @@ Each minted Donation NFT (`token_id = "foodsort-donation-{donation_id}"`) includ
 | `starts_at` | `Option<String>` | `Some(donated_at_ms.to_string())` |
 | `updated_at` | `Option<String>` | `Some(donated_at_ms.to_string())` |
 | `extra` | `Option<String>` | Serialized JSON of `DonationNftExtraMetadata` (see table below) |
-| `reference` | `Option<String>` | `None` |
+| `reference` | `Option<String>` | Often set to the evidence URI (same as `media`) |
 | `reference_hash` | `Option<Base64VecU8>` | `None` |
 
 ### 3.2 `DonationNftExtraMetadata` JSON Fields (Stored in `TokenMetadata.extra`)

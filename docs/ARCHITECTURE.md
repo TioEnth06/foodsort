@@ -1,14 +1,17 @@
-# System Architecture — FoodSort
+# System architecture — FoodSort
 
-## 1. High-Level Architecture Overview
+Live contract: `foodsort-app-86051.testnet` ([TESTNET.md](./TESTNET.md)). App sources live in root `src/` (mirrored under `frontend/`).
 
-FoodSort uses a clean 3-tier Web3 architecture with an isolated, human-in-the-loop AI verification assistant:
-1. **Frontend Client (Next.js App Router)**: Renders the 7 user-facing pages, manages NEAR Testnet wallet connections, and executes direct public JSON-RPC view calls for walletless verification.
-2. **Serverless Next.js API Layer (`/api/*`)**:
-   - `POST /api/upload`: Validates evidence images and pins them to IPFS via Pinata using a server-side `PINATA_JWT`.
-   - `POST /api/ai/verify`: Isolated advisory AI service that evaluates action descriptions, submitted categories (`COMPOST`, `FOOD_RESCUE`, `RESIDUAL`), and evidence images without any wallet or private key access.
-   - `POST /api/ai/audit-log` & `GET /api/ai/audit-log`: Records AI recommendations and human admin decisions as separate, auditable entries.
-3. **NEAR Rust Smart Contract (`contract/`)**: Holds the canonical state for submitted actions, admin verification status, treasury accounting, donation records, and NEP-171 / NEP-177 Donation NFTs.
+## 1. Overview
+
+Three tiers with a human-in-the-loop AI assistant:
+
+1. **Client (Next.js App Router)** — seven pages, MyNearWallet (Testnet), public JSON-RPC views for walletless `/verify`.
+2. **Server API (`/api/*`)**
+   - `POST /api/upload` — Pinata IPFS (server `PINATA_JWT`)
+   - `POST /api/ai/verify` — advisory only; no wallet/keys
+   - `POST|GET /api/ai/audit-log` — AI vs human decisions logged separately
+3. **NEAR Rust contract (`contract/`)** — actions, admin verification, treasury, NEP-171/177/181 Donation NFTs.
 
 ```mermaid
 flowchart TD

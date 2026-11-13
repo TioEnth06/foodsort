@@ -87,4 +87,5 @@
 - App: https://foodsort.vercel.app
 - Verify example: https://foodsort.vercel.app/verify/foodsort-donation-1
 - Action to donate: https://foodsort.vercel.app/actions/2
-- Testnet notes: `docs/TESTNET.md`
+- Testnet notes: [TESTNET.md](./TESTNET.md)
+- Docs index: [README.md](./README.md)
