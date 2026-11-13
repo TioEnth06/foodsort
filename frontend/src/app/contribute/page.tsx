@@ -474,7 +474,7 @@ export default function ContributePage() {
                 ) : (
                   <>
                     <UploadCloud className="h-4 w-4" />
-                    Upload Evidence to IPFS & Submit Action On-Chain
+                    Upload evidence and submit
                   </>
                 )}
               </Button>

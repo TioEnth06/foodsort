@@ -70,18 +70,17 @@ export default function DonorDashboardPage() {
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold uppercase tracking-wider text-[#40916C]">
-              Patronage & Impact Portfolio
+              Your support
             </span>
-            {isUsingDemoData && <Badge variant="demo">DEMO DATA</Badge>}
+            {isUsingDemoData && <Badge variant="demo">Example</Badge>}
           </div>
           <h1 className="text-3xl font-extrabold text-[#1B4332]">
-            Donor Dashboard
+            Donor hub
           </h1>
           <p className="text-sm text-[#525B56] max-w-2xl">
-            Inspect your connected wallet&apos;s native NEAR donations and
-            NEP-171 Patronage NFTs. Every NFT preserves the original
-            contributor&apos;s attribution while net funds remain transparently
-            held in the contract treasury.
+            See donations and certificates tied to your wallet. Every
+            certificate keeps credit with the original contributor, and net
+            funds stay held in the treasury.
           </p>
         </div>
 
@@ -151,25 +150,25 @@ export default function DonorDashboardPage() {
 
         <Card>
           <CardHeader className="pb-1">
-            <CardDescription>Funds Held in Treasury (Your Net)</CardDescription>
-            <CardTitle className="font-mono text-2xl text-[#1B4332]">
+            <CardDescription>Your net held in treasury</CardDescription>
+            <CardTitle className="text-2xl text-[#1B4332]">
               {formatYoctoToNear(totalNetDonatedYocto, 4)} NEAR
             </CardTitle>
           </CardHeader>
           <CardContent className="text-xs text-[#40916C] font-semibold">
-            Status: {treasury.treasury_status} (Distributed: 0 NEAR)
+            Held in treasury · Distributed: 0 NEAR
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-1">
-            <CardDescription>NEP-171 Patronage NFTs Owned</CardDescription>
-            <CardTitle className="font-mono text-2xl text-[#1B4332]">
+            <CardDescription>Certificates you own</CardDescription>
+            <CardTitle className="text-2xl text-[#1B4332]">
               {ownedNfts.length}
             </CardTitle>
           </CardHeader>
           <CardContent className="text-xs text-[#525B56]">
-            Queried via <code>nft_tokens_for_owner</code>
+            From your connected wallet
           </CardContent>
         </Card>
 
@@ -186,21 +185,20 @@ export default function DonorDashboardPage() {
         </Card>
       </div>
 
-      {/* Owned NEP-171 Patronage NFTs */}
+      {/* Owned certificates */}
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h2 className="text-xl font-bold text-[#1B4332]">
-              Owned NEP-171 Patronage Certificates ({ownedNfts.length})
+              Your certificates ({ownedNfts.length})
             </h2>
             <p className="text-xs text-[#525B56]">
-              Strictly displays NFTs owned by your connected wallet (never
-              exposes another user&apos;s private portfolio).
+              Only certificates owned by your connected wallet.
             </p>
           </div>
           <Link href="/verify">
             <Button variant="outline" size="sm">
-              Open Public Verification Page
+              Open verification
             </Button>
           </Link>
         </div>
@@ -208,45 +206,45 @@ export default function DonorDashboardPage() {
         {isLoadingChain ? (
           <Card className="p-12 text-center text-sm text-[#525B56] flex items-center justify-center gap-2">
             <Loader2 className="h-4 w-4 animate-spin text-[#40916C]" />
-            Loading owned NEP-171 Patronage NFTs from NEAR Testnet...
+            Loading your certificates...
           </Card>
         ) : !accountId ? (
           <Card className="p-8 text-center space-y-4">
             <p className="text-sm text-[#525B56]">
-              Connect your NEAR Testnet wallet to view your personal NEP-171
-              Patronage NFT gallery and donation ledger.
+              Connect a NEAR wallet to see your certificates and donation
+              history.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-2">
               <Button variant="primary" size="sm" onClick={openWalletModal}>
                 <Wallet className="h-4 w-4" />
-                Connect NEAR Testnet Wallet
+                Connect NEAR
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => connectWithTestnetAccount("green-patron.testnet")}
               >
-                Test Wallet With NFTs (green-patron.testnet)
+                Try sample donor
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => connectWithTestnetAccount("empty-wallet.testnet")}
               >
-                Test Wallet Without NFTs (empty-wallet.testnet)
+                Try empty wallet
               </Button>
             </div>
           </Card>
         ) : ownedNfts.length === 0 ? (
           <Card className="p-8 text-center space-y-3">
             <p className="text-sm text-[#525B56]">
-              No NEP-171 Patronage NFTs are currently owned by connected wallet{" "}
-              <code className="font-mono font-semibold">{accountId}</code>.
+              No certificates owned by{" "}
+              <strong>{accountId}</strong> yet.
             </p>
             <div className="flex flex-wrap justify-center gap-2">
               <Link href="/actions">
                 <Button variant="primary" size="sm">
-                  Support a Verified Action to Mint an NFT
+                  Support a verified action
                 </Button>
               </Link>
               <Button
@@ -254,7 +252,7 @@ export default function DonorDashboardPage() {
                 size="sm"
                 onClick={() => connectWithTestnetAccount("green-patron.testnet")}
               >
-                Switch to Demo Patron (green-patron.testnet)
+                Try sample donor
               </Button>
             </div>
           </Card>
@@ -288,16 +286,16 @@ export default function DonorDashboardPage() {
                         {extra?.food_category || "VERIFIED"}
                       </Badge>
                       {token.is_demo_data && (
-                        <Badge variant="demo">DEMO DATA</Badge>
+                        <Badge variant="demo">Example</Badge>
                       )}
                     </div>
                     <div className="absolute top-3 right-3">
-                      <Badge variant="verified">NEP-171</Badge>
+                      <Badge variant="verified">Certificate</Badge>
                     </div>
                   </div>
 
                   <CardHeader className="pb-2">
-                    <div className="font-mono text-xs text-[#40916C] font-bold">
+                    <div className="text-xs text-[#40916C] font-bold">
                       {token.token_id}
                     </div>
                     <CardTitle className="text-base mt-0.5">
@@ -307,41 +305,39 @@ export default function DonorDashboardPage() {
 
                   <CardContent className="flex-1 space-y-3 text-xs">
                     <div className="rounded-xl border border-[#40916C]/40 bg-[#D8F3DC]/35 p-3 space-y-1.5">
-                      <div className="flex justify-between">
+                      <div className="flex justify-between gap-2">
                         <span className="text-[#525B56] flex items-center gap-1">
                           <UserCheck className="h-3.5 w-3.5 text-[#1B4332]" />
-                          Action Performed By:
+                          Contributor
                         </span>
-                        <span className="font-mono font-bold text-[#1B4332]">
+                        <span className="font-bold text-[#1B4332] text-right break-all">
                           {extra?.original_contributor_id || "—"}
                         </span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between gap-2">
                         <span className="text-[#525B56] flex items-center gap-1">
                           <HeartHandshake className="h-3.5 w-3.5 text-[#40916C]" />
-                          Original Patron (Donor):
+                          Original donor
                         </span>
-                        <span className="font-mono font-semibold text-[#1C1F1E]">
+                        <span className="font-semibold text-[#1C1F1E] text-right break-all">
                           {extra?.original_donor_id || token.owner_id}
                         </span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between gap-2">
                         <span className="text-[#525B56] flex items-center gap-1">
                           <Award className="h-3.5 w-3.5 text-[#1B4332]" />
-                          Current NFT Owner:
+                          Current owner
                         </span>
-                        <span className="font-mono font-semibold text-[#1C1F1E]">
+                        <span className="font-semibold text-[#1C1F1E] text-right break-all">
                           {token.owner_id}
                         </span>
                       </div>
                     </div>
 
                     {extra && (
-                      <div className="rounded-xl bg-[#FAF8F5] border border-[#1B4332]/10 p-2.5 space-y-1 font-mono">
+                      <div className="rounded-xl bg-[#FAF8F5] border border-[#1B4332]/10 p-2.5 space-y-1">
                         <div className="flex justify-between">
-                          <span className="text-[#525B56] font-sans">
-                            Net Treasury Donation:
-                          </span>
+                          <span className="text-[#525B56]">Amount held</span>
                           <strong className="text-[#1B4332]">
                             {formatYoctoToNear(
                               extra.net_treasury_donation_yocto,
@@ -351,11 +347,9 @@ export default function DonorDashboardPage() {
                           </strong>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-[#525B56] font-sans">
-                            Treasury Status:
-                          </span>
+                          <span className="text-[#525B56]">Status</span>
                           <span className="text-[#40916C] font-bold">
-                            {extra.treasury_status}
+                            Held in treasury
                           </span>
                         </div>
                       </div>
@@ -369,7 +363,7 @@ export default function DonorDashboardPage() {
                     >
                       <Button variant="primary" size="sm" className="w-full">
                         <ShieldCheck className="h-4 w-4" />
-                        Inspect Public On-Chain Verification Proof
+                        View public proof
                       </Button>
                     </Link>
                   </CardFooter>
@@ -384,12 +378,11 @@ export default function DonorDashboardPage() {
       <Card>
         <CardHeader>
           <CardTitle>
-            On-Chain Donation Ledger for {accountId || "Unconnected Wallet"}
+            Donation history · {accountId || "connect a wallet"}
           </CardTitle>
           <CardDescription>
-            Separates gross attached NEAR, NEP-171 storage byte deposit, and net
-            NEAR held in the FoodSort contract treasury (Funds Distributed: 0
-            NEAR).
+            Amount sent, storage fee, and net held in treasury. Distributed: 0
+            NEAR.
           </CardDescription>
         </CardHeader>
         <CardContent>

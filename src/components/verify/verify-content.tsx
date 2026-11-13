@@ -108,7 +108,7 @@ export function VerifyContent({
         } else {
           setProof(null);
           setProofError(
-            `No NEP-171 Patronage NFT found with token_id '${tokenIdToLoad}'.`
+            `No certificate found for “${tokenIdToLoad}”.`
           );
         }
       } catch (err) {
@@ -162,27 +162,21 @@ export function VerifyContent({
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="verified">
               <ShieldCheck className="h-3.5 w-3.5" />
-              Public Walletless Verification
+              Open to anyone
             </Badge>
             <Badge variant="neutral">
               <Globe className="h-3 w-3" />
-              Network: {NEAR_CONFIG.networkId}
+              NEAR {NEAR_CONFIG.networkId}
             </Badge>
-            {isUsingDemoData && <Badge variant="demo">DEMO DATA</Badge>}
+            {isUsingDemoData && <Badge variant="demo">Example</Badge>}
           </div>
           <h1 className="text-3xl font-extrabold text-[#1B4332]">
-            FoodSort NFT Gallery & Public Verification
+            Verify a certificate
           </h1>
           <p className="text-sm text-[#525B56] max-w-3xl">
-            Accessible without connecting a wallet via{" "}
-            <code className="font-mono">/verify</code> or{" "}
-            <code className="font-mono">/verify/[tokenId]</code>. Queries NEAR
-            Testnet RPC (<code className="font-mono">{NEAR_CONFIG.contractId}</code>
-            ) to verify NEP-171 ownership, NEP-177 metadata, treasury holding
-            status, and 3-party provenance distinguishing the{" "}
-            <strong>Current NFT Owner</strong>,{" "}
-            <strong>Original Donor</strong>, and{" "}
-            <strong>Original Action Contributor</strong>.
+            Look up any support certificate without connecting a wallet. See who
+            sorted the food, who donated, and who holds the certificate now —
+            three roles that stay separate.
           </p>
         </div>
 
@@ -200,7 +194,7 @@ export function VerifyContent({
               isLoadingProof || isLoadingChain ? "animate-spin" : ""
             }`}
           />
-          Retry / Refresh RPC
+          Refresh
         </Button>
       </div>
 
@@ -220,17 +214,17 @@ export function VerifyContent({
               <Input
                 value={lookupInput}
                 onChange={(e) => setLookupInput(e.target.value)}
-                placeholder="Enter NEP-171 token_id (e.g. foodsort-donation-1, foodsort-donation-2)..."
+                placeholder="Certificate id, e.g. foodsort-donation-1"
                 className="pl-10 font-mono bg-white text-[#1C1F1E]"
               />
             </div>
             <Button type="submit" variant="secondary">
-              Verify NEP-171 Token On-Chain
+              Verify certificate
             </Button>
           </form>
 
           <div className="flex flex-wrap items-center gap-2 text-xs">
-            <span className="text-[#D8F3DC]/80">Quick inspect tokens:</span>
+            <span className="text-[#D8F3DC]/80">Quick picks:</span>
             {nftTokens.map((t) => (
               <button
                 key={t.token_id}
@@ -255,7 +249,7 @@ export function VerifyContent({
       {isLoadingProof ? (
         <Card className="p-12 text-center text-sm text-[#525B56] flex items-center justify-center gap-2">
           <Loader2 className="h-4 w-4 animate-spin text-[#40916C]" />
-          Querying NEAR Testnet RPC for <code>{selectedTokenId}</code>...
+          Looking up <code>{selectedTokenId}</code>...
         </Card>
       ) : proofError || !proof ? (
         <Card className="p-8 border-red-300 bg-red-50 text-red-900 text-sm space-y-3">
@@ -299,21 +293,21 @@ export function VerifyContent({
                 <div className="absolute top-3 left-3 flex gap-1.5">
                   <Badge variant="category">{proof.action.food_category}</Badge>
                   {proof.is_demo_data && (
-                    <Badge variant="demo">DEMO DATA</Badge>
+                    <Badge variant="demo">Example</Badge>
                   )}
                 </div>
                 <div className="absolute top-3 right-3">
-                  <Badge variant="verified">NEP-171 + NEP-177</Badge>
+                  <Badge variant="verified">Certificate</Badge>
                 </div>
               </div>
 
               <CardHeader>
-                <div className="flex items-center justify-between font-mono text-xs">
-                  <span className="font-bold text-[#40916C]">
-                    Token ID: {proof.token_id}
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-[#40916C]">
+                    {proof.token_id}
                   </span>
                   <span className="text-[#525B56]">
-                    Network: {proof.network || NEAR_CONFIG.networkId}
+                    NEAR {proof.network || NEAR_CONFIG.networkId}
                   </span>
                 </div>
                 <CardTitle className="text-lg mt-1">
@@ -324,15 +318,29 @@ export function VerifyContent({
                 </CardDescription>
               </CardHeader>
 
-              <CardContent className="space-y-3 text-xs">
-                <div className="rounded-xl bg-[#FAF8F5] border border-[#1B4332]/15 p-3 font-mono space-y-1">
-                  <div className="font-sans font-semibold text-[#1B4332] pb-1">
-                    Raw NEP-177 TokenMetadata.extra JSON
+              <CardContent className="space-y-3 text-sm">
+                {parsedExtra && (
+                  <div className="rounded-xl bg-[#FAF8F5] border border-[#1B4332]/15 p-4 space-y-2">
+                    <div className="font-semibold text-[#1B4332]">
+                      Certificate details
+                    </div>
+                    <div className="space-y-1.5 text-xs text-[#525B56]">
+                      {Object.entries(parsedExtra).map(([key, value]) => (
+                        <div
+                          key={key}
+                          className="flex justify-between gap-3 border-b border-[#1B4332]/8 pb-1 last:border-0"
+                        >
+                          <span className="capitalize">
+                            {key.replace(/_/g, " ")}
+                          </span>
+                          <span className="font-medium text-[#1C1F1E] text-right break-all">
+                            {String(value)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <pre className="overflow-x-auto text-[11px] text-[#1C1F1E] leading-relaxed">
-                    {JSON.stringify(parsedExtra, null, 2)}
-                  </pre>
-                </div>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -343,7 +351,7 @@ export function VerifyContent({
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-wider text-[#40916C] flex items-center gap-1.5">
                     <Users className="h-4 w-4" />
-                    Three-Party Cryptographic Provenance
+                    Who is who
                   </span>
                   <Badge
                     variant={
@@ -351,17 +359,16 @@ export function VerifyContent({
                     }
                   >
                     {proof.is_held_by_original_donor
-                      ? "Held by Original Donor"
-                      : "Transferred After Mint (Secondary Holder)"}
+                      ? "Still with original donor"
+                      : "Transferred to a new holder"}
                   </Badge>
                 </div>
                 <CardTitle className="text-xl mt-1">
-                  Role Separation & Attribution Proof
+                  Contributor, donor, and owner stay distinct
                 </CardTitle>
                 <CardDescription>
-                  FoodSort strictly separates the person who performed the
-                  food-sorting action from the financial patron and the current
-                  NFT holder.
+                  The person who sorted the food is never confused with the
+                  person who donated, or with whoever holds the certificate now.
                 </CardDescription>
               </CardHeader>
 
@@ -420,7 +427,7 @@ export function VerifyContent({
                       {proof.current_owner_id}
                     </div>
                     <p className="text-[11px] text-[#525B56]">
-                      Current NEP-171 holder of <code>{proof.token_id}</code>.
+                      Holds certificate <code>{proof.token_id}</code> now.
                     </p>
                     <a
                       href={getExplorerAccountUrl(proof.current_owner_id)}
@@ -436,18 +443,17 @@ export function VerifyContent({
                 <div className="rounded-xl border border-[#1B4332]/20 bg-white p-4 space-y-2.5 text-xs">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-[#1B4332]">
-                      On-Chain Donation & Treasury Accounting (Donation #
-                      {proof.donation.donation_id})
+                      Donation #{proof.donation.donation_id}
                     </span>
                     <Badge variant="verified">
-                      {proof.donation.treasury_status} (Distributed: 0 NEAR)
+                      Held in treasury · Distributed: 0 NEAR
                     </Badge>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 font-mono pt-1">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
                     <div className="rounded-lg bg-[#FAF8F5] p-2.5">
-                      <div className="text-[11px] font-sans text-[#525B56]">
-                        Gross Attached Deposit
+                      <div className="text-[11px] text-[#525B56]">
+                        Amount sent
                       </div>
                       <div className="text-sm font-bold text-[#1C1F1E]">
                         {formatYoctoToNear(
@@ -459,8 +465,8 @@ export function VerifyContent({
                     </div>
 
                     <div className="rounded-lg bg-[#FAF8F5] p-2.5">
-                      <div className="text-[11px] font-sans text-[#525B56]">
-                        NEP-171 Storage Reserved
+                      <div className="text-[11px] text-[#525B56]">
+                        Storage fee
                       </div>
                       <div className="text-sm font-bold text-[#525B56]">
                         {formatYoctoToNear(
@@ -472,8 +478,8 @@ export function VerifyContent({
                     </div>
 
                     <div className="rounded-lg bg-[#D8F3DC]/50 p-2.5">
-                      <div className="text-[11px] font-sans text-[#1B4332]">
-                        Funds Held in Treasury
+                      <div className="text-[11px] text-[#1B4332]">
+                        Held in treasury
                       </div>
                       <div className="text-sm font-bold text-[#1B4332]">
                         {formatYoctoToNear(
@@ -487,23 +493,23 @@ export function VerifyContent({
 
                   <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#1B4332]/10">
                     <span className="text-[#525B56]">
-                      Minted At: {formatTimestamp(proof.donation.donated_at_ms)}
+                      Issued {formatTimestamp(proof.donation.donated_at_ms)}
                     </span>
                     <div className="flex items-center gap-3">
                       <Link
                         href={`/verify/${encodeURIComponent(proof.token_id)}`}
-                        className="font-mono font-semibold text-[#1B4332] underline"
+                        className="font-semibold text-[#1B4332] underline"
                       >
-                        Direct Permalink (/verify/{proof.token_id})
+                        Share link
                       </Link>
                       {proof.donation.tx_hash && (
                         <a
                           href={getExplorerTxUrl(proof.donation.tx_hash)}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1 font-mono font-semibold text-[#40916C] underline"
+                          className="inline-flex items-center gap-1 font-semibold text-[#40916C] underline"
                         >
-                          Mint Tx: {proof.donation.tx_hash}
+                          View transaction
                           <ExternalLink className="h-3 w-3" />
                         </a>
                       )}
@@ -555,11 +561,10 @@ export function VerifyContent({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-2xl font-bold text-[#1B4332]">
-              On-Chain NEP-171 Patronage NFT Gallery
+              Certificate gallery
             </h2>
             <p className="text-xs text-[#525B56]">
-              Click any NFT card to load its complete 3-party cryptographic
-              verification proof above.
+              Pick a certificate to see its full record above.
             </p>
           </div>
 
@@ -569,14 +574,14 @@ export function VerifyContent({
               variant={galleryTab === "all" ? "primary" : "outline"}
               onClick={() => setGalleryTab("all")}
             >
-              All Minted NFTs ({nftTokens.length})
+              All ({nftTokens.length})
             </Button>
             <Button
               size="sm"
               variant={galleryTab === "owned" ? "primary" : "outline"}
               onClick={() => setGalleryTab("owned")}
             >
-              Owned by Connected Wallet (
+              Mine (
               {accountId
                 ? nftTokens.filter((t) => t.owner_id === accountId).length
                 : 0}
@@ -588,8 +593,8 @@ export function VerifyContent({
         {displayedGalleryTokens.length === 0 ? (
           <Card className="p-8 text-center text-sm text-[#525B56]">
             {galleryTab === "owned" && !accountId
-              ? "Connect your NEAR Testnet wallet to filter NFTs owned by your account, or view All Minted NFTs."
-              : `No NEP-171 NFTs are currently owned by ${accountId}.`}
+              ? "Connect a NEAR wallet to see certificates you own, or browse all."
+              : `No certificates owned by ${accountId}.`}
           </Card>
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

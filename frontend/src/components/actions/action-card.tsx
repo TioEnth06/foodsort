@@ -70,7 +70,7 @@ export function ActionCard({ action }: { action: FoodAction }) {
           />
           <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
             <Badge variant="category">{action.food_category}</Badge>
-            {action.is_demo_data && <Badge variant="demo">DEMO DATA</Badge>}
+            {action.is_demo_data && <Badge variant="demo">Example</Badge>}
           </div>
           <div className="absolute top-3 right-3">{statusBadge()}</div>
         </div>
@@ -94,9 +94,9 @@ export function ActionCard({ action }: { action: FoodAction }) {
             <div className="flex items-center justify-between">
               <span className="text-[#525B56] flex items-center gap-1">
                 <UserCheck className="h-3.5 w-3.5 text-[#40916C]" />
-                Original Contributor:
+                Contributor
               </span>
-              <span className="font-mono font-semibold text-[#1B4332]">
+              <span className="font-semibold text-[#1B4332] truncate max-w-[55%]">
                 {action.contributor_id}
               </span>
             </div>
@@ -104,12 +104,10 @@ export function ActionCard({ action }: { action: FoodAction }) {
             <div className="flex items-center justify-between">
               <span className="text-[#525B56] flex items-center gap-1">
                 <HeartHandshake className="h-3.5 w-3.5 text-[#1B4332]" />
-                Held in Treasury:
+                Support held
               </span>
-              <span className="font-mono font-semibold text-[#1C1F1E]">
-                {formatYoctoToNear(action.total_donated_yocto, 4)} NEAR (
-                {action.donation_count} patron
-                {action.donation_count === 1 ? "" : "s"})
+              <span className="font-semibold text-[#1C1F1E]">
+                {formatYoctoToNear(action.total_donated_yocto, 4)} NEAR
               </span>
             </div>
           </div>
@@ -123,8 +121,8 @@ export function ActionCard({ action }: { action: FoodAction }) {
             >
               <span>
                 {action.status === "Verified"
-                  ? "Support Verified Action & Mint NFT"
-                  : "Inspect Action & Evidence"}
+                  ? "Support this action"
+                  : "View details"}
               </span>
               <ArrowRight className="h-4 w-4" />
             </Button>

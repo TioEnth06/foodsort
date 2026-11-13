@@ -224,8 +224,8 @@ export function AiVerificationPanel({
           <div className="rounded-lg bg-[#F3EFE6] px-3 py-2 text-[11px] text-[#525B56] flex items-start gap-2">
             <ShieldAlert className="h-4 w-4 text-[#1B4332] shrink-0 mt-0.5" />
             <span>
-              {analysis.disclaimer || MANDATORY_AI_DISCLAIMER} Requires explicit
-              human approval (<code>requires_human_approval: true</code>).
+              {analysis.disclaimer || MANDATORY_AI_DISCLAIMER} A human must still
+              approve before anything is verified on-chain.
             </span>
           </div>
         </div>

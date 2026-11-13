@@ -11,17 +11,17 @@ import { Badge } from "@/components/ui/badge";
 import { Filter, Search, UploadCloud } from "lucide-react";
 
 const STATUS_TABS: Array<{ label: string; value: "ALL" | ActionStatus }> = [
-  { label: "All Actions", value: "ALL" },
-  { label: "Verified (Eligible for Patronage)", value: "Verified" },
-  { label: "Pending Verification", value: "Pending" },
+  { label: "All", value: "ALL" },
+  { label: "Verified", value: "Verified" },
+  { label: "Pending", value: "Pending" },
   { label: "Rejected", value: "Rejected" },
 ];
 
 const CATEGORY_TABS: Array<{ label: string; value: "ALL" | FoodCategory }> = [
-  { label: "All Categories", value: "ALL" },
-  { label: "COMPOST", value: "COMPOST" },
-  { label: "FOOD_RESCUE", value: "FOOD_RESCUE" },
-  { label: "RESIDUAL", value: "RESIDUAL" },
+  { label: "All", value: "ALL" },
+  { label: "Compost", value: "COMPOST" },
+  { label: "Food rescue", value: "FOOD_RESCUE" },
+  { label: "Residual", value: "RESIDUAL" },
 ];
 
 export default function ActionsListingPage() {
@@ -60,23 +60,24 @@ export default function ActionsListingPage() {
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold uppercase tracking-wider text-[#40916C]">
-              On-Chain Registry
+              Explore
             </span>
-            {isUsingDemoData && <Badge variant="demo">DEMO DATA</Badge>}
+            {isUsingDemoData && <Badge variant="demo">Example</Badge>}
           </div>
           <h1 className="text-3xl font-extrabold text-[#1B4332]">
-            Food-Sorting Actions Directory
+            Verified food-sorting actions
           </h1>
           <p className="text-sm text-[#525B56] max-w-2xl">
-            Only actions verified by the contract administrator are eligible to
-            receive native NEAR donations and mint NEP-171 Patronage NFTs.
+            Browse community sorting work. Only verified actions can receive
+            support — and each donation keeps credit with the original
+            contributor.
           </p>
         </div>
 
         <Link href="/contribute">
           <Button variant="primary">
             <UploadCloud className="h-4 w-4" />
-            Submit New Sorting Action
+            Submit an action
           </Button>
         </Link>
       </div>
@@ -86,7 +87,7 @@ export default function ActionsListingPage() {
           <div className="lg:col-span-5 relative">
             <Search className="h-4 w-4 text-[#525B56] absolute left-3.5 top-3.5" />
             <Input
-              placeholder="Search by contributor (.testnet), action ID, or description..."
+              placeholder="Search by contributor, id, or description..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"

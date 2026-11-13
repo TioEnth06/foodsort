@@ -209,7 +209,7 @@ export default function AdminDashboardPage() {
             <span className="text-xs font-bold uppercase tracking-wider text-[#40916C]">
               On-Chain Verification & AI Triage Assistant
             </span>
-            {isUsingDemoData && <Badge variant="demo">DEMO DATA</Badge>}
+            {isUsingDemoData && <Badge variant="demo">Example</Badge>}
           </div>
           <h1 className="text-3xl font-extrabold text-[#1B4332]">
             FoodSort Admin Verification Dashboard
@@ -364,7 +364,7 @@ export default function AdminDashboardPage() {
                       <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
                         <Badge variant="category">{action.food_category}</Badge>
                         {action.is_demo_data && (
-                          <Badge variant="demo">DEMO DATA</Badge>
+                          <Badge variant="demo">Example</Badge>
                         )}
                       </div>
                       <div className="absolute top-3 right-3">

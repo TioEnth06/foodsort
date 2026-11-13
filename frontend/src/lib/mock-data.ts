@@ -178,7 +178,7 @@ function buildDemoNftToken(
     owner_id: currentOwnerId || donation.donor_id,
     metadata: {
       title: `FoodSort Patronage NFT #${donation.donation_id} — Action #${action.action_id} (${action.food_category})`,
-      description: `Verified food-sorting patronage certificate. Action performed by ${action.contributor_id}; supported by patron ${donation.donor_id}. Funds are transparently held in the FoodSort contract treasury (HELD_IN_TREASURY).`,
+      description: `Certificate of support for a verified sorting action by ${action.contributor_id}, backed by ${donation.donor_id}. Net funds remain held in the FoodSort treasury.`,
       media: action.evidence_uri,
       copies: 1,
       issued_at: String(donation.donated_at_ms),

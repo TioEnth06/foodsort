@@ -7,7 +7,6 @@ import { useNearWallet } from "@/lib/near/wallet-provider";
 import {
   getExplorerAccountUrl,
   getExplorerTxUrl,
-  NEAR_CONFIG,
 } from "@/lib/near/config";
 import {
   Card,
@@ -109,7 +108,7 @@ export default function ActionDetailPage() {
       const minGross = BigInt("115000000000000000000000");
       if (BigInt(depositYocto) < minGross) {
         setTxError(
-          "Minimum attached amount is 0.12 NEAR (covers 0.1 NEAR minimum net treasury donation plus NEP-171 on-chain storage bytes)."
+          "Minimum is 0.12 NEAR (covers the donation plus on-chain storage)."
         );
         return;
       }
@@ -171,7 +170,7 @@ export default function ActionDetailPage() {
               <div className="absolute top-4 left-4 flex flex-wrap gap-2">
                 <Badge variant="category">{action.food_category}</Badge>
                 {action.is_demo_data && (
-                  <Badge variant="demo">DEMO DATA RECORD</Badge>
+                  <Badge variant="demo">Example</Badge>
                 )}
               </div>
             </div>
@@ -215,7 +214,7 @@ export default function ActionDetailPage() {
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-wider text-[#1B4332] flex items-center gap-1.5">
                     <UserCheck className="h-4 w-4 text-[#40916C]" />
-                    Original Action Contributor (Action Performer)
+                    Contributor
                   </span>
                   <a
                     href={getExplorerAccountUrl(action.contributor_id)}
@@ -223,51 +222,46 @@ export default function ActionDetailPage() {
                     rel="noreferrer"
                     className="inline-flex items-center gap-1 text-xs font-medium text-[#1B4332] hover:underline"
                   >
-                    NEAR Explorer
+                    Explorer
                     <ExternalLink className="h-3 w-3" />
                   </a>
                 </div>
-                <div className="font-mono text-base font-bold text-[#1B4332]">
+                <div className="text-base font-bold text-[#1B4332]">
                   {action.contributor_id}
                 </div>
                 <p className="text-xs text-[#525B56]">
-                  When a donor supports this action via{" "}
-                  <code className="font-mono">donate_and_mint()</code>, the smart
-                  contract reads{" "}
-                  <code className="font-mono">{action.contributor_id}</code>{" "}
-                  directly from verified contract storage and embeds it inside the
-                  minted NEP-171 NFT metadata.
+                  When you support this action, their name is locked into the
+                  certificate — permanently.
                 </p>
               </div>
 
               <div className="rounded-xl border border-[#1B4332]/15 bg-[#FAF8F5] p-4 text-xs space-y-2">
-                <div className="font-semibold text-[#1C1F1E]">
-                  On-Chain Evidence & Verification Metadata
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-mono">
+                <div className="font-semibold text-[#1C1F1E]">Details</div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div>
                     <span className="text-[#525B56]">Category:</span>{" "}
-                    <strong>{action.food_category}</strong>
+                    <strong>
+                      {action.food_category.replace(/_/g, " ").toLowerCase()}
+                    </strong>
                   </div>
                   <div>
-                    <span className="text-[#525B56]">Verified By:</span>{" "}
+                    <span className="text-[#525B56]">Verified by:</span>{" "}
                     <strong>{action.verified_by || "—"}</strong>
                   </div>
-                  <div className="sm:col-span-2 truncate">
-                    <span className="text-[#525B56]">Evidence URI:</span>{" "}
+                  <div className="sm:col-span-2">
                     <a
                       href={resolveIpfsUrl(action.evidence_uri)}
                       target="_blank"
                       rel="noreferrer"
                       className="text-[#40916C] hover:underline"
                     >
-                      {action.evidence_uri}
+                      View evidence photo
                     </a>
                   </div>
                 </div>
                 {action.rejection_reason && (
                   <div className="rounded-lg bg-red-50 border border-red-200 p-2.5 text-red-900">
-                    <strong>Rejection Reason:</strong> {action.rejection_reason}
+                    <strong>Reason:</strong> {action.rejection_reason}
                   </div>
                 )}
               </div>
@@ -277,18 +271,17 @@ export default function ActionDetailPage() {
           <Card>
             <CardHeader>
               <CardTitle>
-                Patronage History for Action #{action.action_id} (
-                {actionDonations.length})
+                Support history ({actionDonations.length})
               </CardTitle>
               <CardDescription>
-                Every donation mints a verifiable 1-of-1 NEP-171 certificate while
-                holding net NEAR in the contract treasury.
+                Each donation creates a certificate and keeps net NEAR held in
+                the treasury.
               </CardDescription>
             </CardHeader>
             <CardContent>
               {actionDonations.length === 0 ? (
                 <p className="text-sm text-[#525B56]">
-                  No patronage donations recorded for this action yet.
+                  No support yet for this action.
                 </p>
               ) : (
                 <div className="space-y-3">
@@ -299,37 +292,33 @@ export default function ActionDetailPage() {
                     >
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono font-bold text-[#1B4332]">
+                          <span className="font-bold text-[#1B4332]">
                             {don.token_id}
                           </span>
-                          <Badge variant="verified">{don.treasury_status}</Badge>
+                          <Badge variant="verified">Held in treasury</Badge>
                         </div>
                         <div className="text-[#525B56]">
-                          Original Donor:{" "}
-                          <strong className="font-mono text-[#1C1F1E]">
+                          Donor:{" "}
+                          <strong className="text-[#1C1F1E]">
                             {don.donor_id}
                           </strong>{" "}
-                          • Action Performed By:{" "}
-                          <strong className="font-mono text-[#1B4332]">
+                          · Contributor:{" "}
+                          <strong className="text-[#1B4332]">
                             {don.contributor_id}
                           </strong>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-3">
-                        <div className="text-right font-mono">
+                        <div className="text-right">
                           <div className="font-bold text-[#1B4332]">
                             {formatYoctoToNear(don.net_treasury_amount_yocto, 4)}{" "}
-                            NEAR Net
-                          </div>
-                          <div className="text-[11px] text-[#525B56]">
-                            (+{formatYoctoToNear(don.storage_cost_yocto, 4)}{" "}
-                            storage)
+                            NEAR
                           </div>
                         </div>
                         <Link href={`/verify?token=${don.token_id}`}>
                           <Button size="sm" variant="outline">
-                            Verify NFT
+                            Verify
                           </Button>
                         </Link>
                       </div>
@@ -346,16 +335,16 @@ export default function ActionDetailPage() {
             <CardHeader className="bg-[#1B4332] text-[#FAF8F5] rounded-t-2xl">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider text-[#D8F3DC]">
-                  Native NEAR Patronage
+                  Support with NEAR
                 </span>
-                <Badge variant="verified">NEP-171 Mint</Badge>
+                <Badge variant="verified">Certificate</Badge>
               </div>
               <CardTitle className="text-white text-xl mt-1">
-                Support Verified Action & Mint NFT
+                Support this action
               </CardTitle>
               <CardDescription className="text-[#D8F3DC]/85">
-                Calls <code className="font-mono">donate_and_mint()</code> on{" "}
-                <code className="font-mono">{NEAR_CONFIG.contractId}</code>
+                Your donation stays held in the treasury and mints a certificate
+                that credits the contributor
               </CardDescription>
             </CardHeader>
 
@@ -367,18 +356,15 @@ export default function ActionDetailPage() {
                     Action Not Eligible for Donations ({action.status})
                   </div>
                   <p>
-                    The FoodSort smart contract strictly rejects donations for{" "}
-                    <strong>{action.status}</strong> actions (
-                    <code className="font-mono">ERR_ACTION_NOT_VERIFIED</code>).
-                    An authorized administrator must verify this action on-chain
-                    before patronage is enabled.
+                    Only verified actions can receive support. An admin needs to
+                    approve this one first.
                   </p>
                 </div>
               ) : (
                 <form onSubmit={handleDonateAndMint} className="space-y-4">
                   <div className="space-y-2">
                     <label className="text-xs font-bold uppercase tracking-wider text-[#1B4332]">
-                      Select or Enter Attached NEAR Amount
+                      Amount (NEAR)
                     </label>
                     <div className="grid grid-cols-4 gap-2">
                       {PRESET_AMOUNTS.map((amt) => (
@@ -408,53 +394,44 @@ export default function ActionDetailPage() {
                   </div>
 
                   <div className="rounded-xl border border-[#1B4332]/15 bg-[#FAF8F5] p-3.5 text-xs space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-[#525B56]">
-                        Action Performed By (Contributor):
-                      </span>
-                      <span className="font-mono font-bold text-[#1B4332]">
+                    <div className="flex justify-between gap-2">
+                      <span className="text-[#525B56]">Contributor</span>
+                      <span className="font-bold text-[#1B4332] text-right break-all">
                         {action.contributor_id}
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-[#525B56]">
-                        Patron / NFT Recipient (Donor):
-                      </span>
-                      <span className="font-mono font-semibold text-[#1C1F1E]">
+                    <div className="flex justify-between gap-2">
+                      <span className="text-[#525B56]">You (donor)</span>
+                      <span className="font-semibold text-[#1C1F1E] text-right break-all">
                         {accountId || "Connect wallet"}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#525B56]">
-                        Minimum Net Treasury Donation:
-                      </span>
-                      <span className="font-mono">0.1000 NEAR</span>
+                      <span className="text-[#525B56]">Min. to treasury</span>
+                      <span>0.10 NEAR</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#525B56]">
-                        Estimated NEP-171 Storage Cost:
-                      </span>
-                      <span className="font-mono">~0.0068 NEAR</span>
+                      <span className="text-[#525B56]">Est. storage fee</span>
+                      <span>~0.007 NEAR</span>
                     </div>
                     <div className="border-t border-[#1B4332]/10 pt-2 flex justify-between font-semibold text-[#1B4332]">
-                      <span>Treasury Holding Status:</span>
-                      <span className="font-mono">HELD_IN_TREASURY</span>
+                      <span>Funds stay</span>
+                      <span>Held in treasury</span>
                     </div>
                   </div>
 
                   <div className="rounded-xl bg-[#F3EFE6] p-3 text-xs text-[#525B56] space-y-1">
                     <div className="flex items-center gap-1.5 font-semibold text-[#1B4332]">
                       <ShieldCheck className="h-4 w-4 text-[#40916C]" />
-                      Attribution & Treasury Guarantee
+                      Credit stays honest
                     </div>
                     <p>
-                      Your minted NFT proves your financial patronage while
-                      permanently attributing the physical sorting action to{" "}
-                      <strong className="font-mono text-[#1C1F1E]">
+                      Your certificate proves you donated, while the sorting
+                      credit stays with{" "}
+                      <strong className="text-[#1C1F1E]">
                         {action.contributor_id}
                       </strong>
-                      . Net donated NEAR remains held transparently in the
-                      contract treasury and is never falsely claimed as
+                      . Net NEAR remains held in the treasury — not marked as
                       distributed.
                     </p>
                   </div>
