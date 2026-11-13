@@ -1,92 +1,129 @@
 import React from "react";
 import Link from "next/link";
 import { NEAR_CONFIG } from "@/lib/near/config";
-import { ExternalLink, Leaf, ShieldCheck } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="border-t border-[#1B4332]/15 bg-[#1B4332] text-[#FAF8F5] mt-16">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-          <div className="md:col-span-2 space-y-3">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#40916C] text-white">
-                <Leaf className="h-5 w-5" />
-              </div>
-              <span className="text-lg font-bold tracking-tight">
-                FoodSort Protocol • NEAR Hackathon 2026
+    <footer className="border-t border-[#102A1F]/15 bg-[#0C1712] text-[#F5F2E9]">
+      <div className="mx-auto max-w-[1440px] px-4 py-16 sm:px-8 lg:px-12">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 pb-12 border-b border-white/10">
+          {/* Brand & Tagline */}
+          <div className="lg:col-span-6 space-y-4">
+            <div className="flex items-baseline gap-3">
+              <span className="text-2xl font-extrabold tracking-[-0.04em] text-[#F5F2E9]">
+                FoodSort
+              </span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#C7F36B]">
+                Verified Food Impact on NEAR
               </span>
             </div>
-            <p className="text-sm text-[#D8F3DC]/85 max-w-xl leading-relaxed">
-              Verifiable food-sorting action registry and NEP-171 patronage NFT
-              protocol on NEAR Testnet. Original contributor attribution is
-              permanently preserved on-chain, and all net donations remain
-              transparently held in the contract treasury (
-              <code className="font-mono text-white">HELD_IN_TREASURY</code>).
+            <p className="text-xl sm:text-2xl font-semibold tracking-[-0.02em] text-[#F5F2E9]/90 max-w-md">
+              Sort food. Support change. Collect impact.
             </p>
-            <div className="inline-flex items-center gap-2 rounded-xl bg-[#122E22] px-3 py-2 text-xs text-[#D8F3DC]">
-              <ShieldCheck className="h-4 w-4 text-[#40916C] shrink-0" />
-              <span>
-                Truthfulness Guardrail: FoodSort never claims that treasury
-                funds have been distributed while held in contract state.
-              </span>
-            </div>
+            <p className="text-xs font-mono text-[#F5F2E9]/60 max-w-lg leading-relaxed">
+              Verified food impact, made visible. Original contributor
+              attribution is permanently preserved on-chain, and 100% of net
+              donations remain transparently held in the contract treasury (
+              <span className="text-[#C7F36B]">HELD_IN_TREASURY</span>).
+            </p>
           </div>
 
-          <div className="space-y-2.5 text-sm">
-            <h4 className="font-semibold text-[#D8F3DC] uppercase tracking-wider text-xs">
-              Platform Navigation
-            </h4>
-            <ul className="space-y-2 text-[#FAF8F5]/85">
+          {/* Navigation Links */}
+          <div className="lg:col-span-3 space-y-3">
+            <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#F5F2E9]/45">
+              Navigation
+            </div>
+            <ul className="space-y-2.5 text-sm font-medium text-[#F5F2E9]/85">
               <li>
-                <Link href="/actions" className="hover:text-white">
-                  Explore Verified Actions
+                <Link
+                  href="/actions"
+                  className="editorial-link hover:text-[#C7F36B] transition-colors"
+                >
+                  Explore
                 </Link>
               </li>
               <li>
-                <Link href="/contribute" className="hover:text-white">
-                  Submit Sorting Action
+                <Link
+                  href="/contribute"
+                  className="editorial-link hover:text-[#C7F36B] transition-colors"
+                >
+                  Contribute
                 </Link>
               </li>
               <li>
-                <Link href="/donor" className="hover:text-white">
-                  Donor Dashboard
+                <Link
+                  href="/donor"
+                  className="editorial-link hover:text-[#C7F36B] transition-colors"
+                >
+                  Donor Hub
                 </Link>
               </li>
               <li>
-                <Link href="/admin" className="hover:text-white">
-                  Admin Review & AI Assistant
+                <Link
+                  href="/verify"
+                  className="editorial-link hover:text-[#C7F36B] transition-colors"
+                >
+                  Verify
                 </Link>
               </li>
               <li>
-                <Link href="/verify" className="hover:text-white">
-                  Public NFT Verification
+                <Link
+                  href="/admin"
+                  className="editorial-link hover:text-[#C7F36B] transition-colors"
+                >
+                  Admin
                 </Link>
               </li>
             </ul>
           </div>
 
-          <div className="space-y-2.5 text-sm">
-            <h4 className="font-semibold text-[#D8F3DC] uppercase tracking-wider text-xs">
-              On-Chain Specifications
-            </h4>
-            <ul className="space-y-2 text-xs text-[#FAF8F5]/85 font-mono">
-              <li>Network: {NEAR_CONFIG.networkId}</li>
-              <li>Contract: {NEAR_CONFIG.contractId}</li>
-              <li>Standards: NEP-171, NEP-177, NEP-181</li>
-              <li>Categories: COMPOST, FOOD_RESCUE, RESIDUAL</li>
-              <li className="pt-1 font-sans">
+          {/* Technical & Standards */}
+          <div className="lg:col-span-3 space-y-3">
+            <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#F5F2E9]/45">
+              Protocol & Standards
+            </div>
+            <div className="flex flex-wrap gap-2 font-mono text-xs">
+              {["NEAR Testnet", "NEP-171", "NEP-177", "NEP-181"].map((spec) => (
+                <span
+                  key={spec}
+                  className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[#F5F2E9]/85"
+                >
+                  {spec}
+                </span>
+              ))}
+            </div>
+            <div className="pt-2 space-y-1.5 font-mono text-xs text-[#F5F2E9]/65">
+              <div>Contract: {NEAR_CONFIG.contractId}</div>
+              <div className="flex flex-wrap gap-4 pt-1">
                 <a
                   href={`${NEAR_CONFIG.explorerUrl}/address/${NEAR_CONFIG.contractId}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1 text-[#D8F3DC] hover:underline"
+                  className="inline-flex items-center gap-1 text-[#C7F36B] hover:underline"
                 >
-                  View Contract on NEAR Explorer
-                  <ExternalLink className="h-3.5 w-3.5" />
+                  NEAR Explorer
+                  <ArrowUpRight className="h-3.5 w-3.5" />
                 </a>
-              </li>
-            </ul>
+                <a
+                  href="https://github.com/TioEnth06/foodsort"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 text-[#F5F2E9]/85 hover:text-[#C7F36B] hover:underline"
+                >
+                  GitHub Repository
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-[11px] text-[#F5F2E9]/50">
+          <div>FoodSort • NEAR Hackathon 2026</div>
+          <div>
+            Contributor → Verification → Support → Donation NFT → Public
+            Provenance
           </div>
         </div>
       </div>
