@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "cd frontend && npm run dev",
-    "build": "cd frontend && npm install --no-audit --no-fund && npm run build",
+    "build": "cd frontend && npm install --no-audit --no-fund && npm run build && rm -rf ../.next && cp -r .next ../.next",
     "start": "cd frontend && npm run start",
     "typecheck": "cd frontend && npm run typecheck",
     "lint": "cd frontend && npm run lint",
