@@ -218,7 +218,7 @@ console.log("✓ Integer yoctoNEAR conversion and /verify/[tokenId] route verifi
 // ---------------------------------------------------------------------------
 console.log("[5/5] Running Frontend Lint & TypeScript Check...");
 execSync("npm run lint", {
-  cwd: path.join(rootDir, "frontend"),
+  cwd: rootDir,
   stdio: "inherit",
 });
 console.log("✓ Frontend lint and typecheck passed with zero errors.");
