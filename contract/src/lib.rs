@@ -16,9 +16,7 @@ use near_contract_standards::non_fungible_token::{NonFungibleToken, Token, Token
 use near_sdk::collections::LazyOption;
 use near_sdk::json_types::U128;
 use near_sdk::store::{IterableMap, LookupMap};
-use near_sdk::{
-    env, near, require, AccountId, PanicOnDefault, Promise, PromiseOrValue,
-};
+use near_sdk::{env, near, require, AccountId, PanicOnDefault, PromiseOrValue};
 
 const SUPPORTED_CATEGORIES: [&str; 3] = ["COMPOST", "FOOD_RESCUE", "RESIDUAL"];
 
@@ -186,6 +184,10 @@ impl FoodSortContract {
     pub fn donate_and_mint(&mut self, action_id: u64) -> DonationRecord {
         let storage_before = env::storage_usage();
         let attached_deposit = env::attached_deposit().as_yoctonear();
+        require!(
+            attached_deposit > 0,
+            "ERR_ZERO_DEPOSIT: Attached NEAR deposit must be greater than zero"
+        );
         let donor_id = env::predecessor_account_id();
         let donated_at_ms = env::block_timestamp_ms();
 
@@ -221,8 +223,17 @@ impl FoodSortContract {
             "ERR_DUPLICATE_TOKEN_ID"
         );
 
+        let contract_account = env::current_account_id().to_string();
+        let network = if contract_account.ends_with(".near") {
+            "mainnet".to_string()
+        } else {
+            "testnet".to_string()
+        };
+
         let provisional_extra = DonationNftExtraMetadata {
             schema_version: NFT_METADATA_SCHEMA_VERSION.to_string(),
+            token_id: token_id.clone(),
+            network: network.clone(),
             action_id,
             donation_id,
             original_contributor_id: contributor_id.clone(),
@@ -259,7 +270,7 @@ impl FoodSortContract {
             starts_at: Some(donated_at_ms.to_string()),
             updated_at: Some(donated_at_ms.to_string()),
             extra: Some(extra_json),
-            reference: None,
+            reference: Some(action.evidence_uri.clone()),
             reference_hash: None,
         };
 
@@ -306,6 +317,8 @@ impl FoodSortContract {
 
         let final_extra = DonationNftExtraMetadata {
             schema_version: NFT_METADATA_SCHEMA_VERSION.to_string(),
+            token_id: token_id.clone(),
+            network,
             action_id,
             donation_id,
             original_contributor_id: contributor_id.clone(),
@@ -507,6 +520,7 @@ mod tests {
         assert_eq!(summary.admin_id, admin_account());
         assert_eq!(summary.min_donation_yocto.0, DEFAULT_MIN_DONATION_YOCTO);
         assert_eq!(summary.treasury_balance_yocto.0, 0);
+        assert_eq!(summary.funds_distributed_yocto.0, 0);
         assert_eq!(summary.treasury_status, "HELD_IN_TREASURY");
         assert_eq!(contract.nft_metadata().symbol, "FSORT");
     }
@@ -565,6 +579,56 @@ mod tests {
     }
 
     #[test]
+    #[should_panic(expected = "ERR_ACTION_NOT_PENDING")]
+    fn test_admin_cannot_verify_already_verified_action() {
+        let ctx = get_context(contributor_account(), 0);
+        testing_env!(ctx.build());
+
+        let mut contract = FoodSortContract::new(admin_account(), None);
+        let action_id = contract.submit_action(
+            "COMPOST".to_string(),
+            "Household Organic Separation".to_string(),
+            "Sorted 5kg of vegetable scraps into compost bin.".to_string(),
+            "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi".to_string(),
+        );
+
+        let admin_ctx = get_context(admin_account(), 0);
+        testing_env!(admin_ctx.build());
+        contract.verify_action(action_id);
+        contract.verify_action(action_id);
+    }
+
+    #[test]
+    #[should_panic(expected = "ERR_ACTION_NOT_PENDING")]
+    fn test_admin_cannot_verify_rejected_action() {
+        let ctx = get_context(contributor_account(), 0);
+        testing_env!(ctx.build());
+
+        let mut contract = FoodSortContract::new(admin_account(), None);
+        let action_id = contract.submit_action(
+            "RESIDUAL".to_string(),
+            "Residual Separation".to_string(),
+            "Separated contaminated packaging from clean compost batch.".to_string(),
+            "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi".to_string(),
+        );
+
+        let admin_ctx = get_context(admin_account(), 0);
+        testing_env!(admin_ctx.build());
+        contract.reject_action(action_id, "Blurry image".to_string());
+        contract.verify_action(action_id);
+    }
+
+    #[test]
+    #[should_panic(expected = "ERR_ACTION_NOT_FOUND")]
+    fn test_admin_cannot_verify_nonexistent_action() {
+        let admin_ctx = get_context(admin_account(), 0);
+        testing_env!(admin_ctx.build());
+
+        let mut contract = FoodSortContract::new(admin_account(), None);
+        contract.verify_action(999);
+    }
+
+    #[test]
     #[should_panic(expected = "ERR_ACTION_NOT_VERIFIED")]
     fn test_donate_rejected_for_pending_action() {
         let ctx = get_context(contributor_account(), 0);
@@ -581,6 +645,29 @@ mod tests {
         let donor_ctx = get_context(donor_account(), NearToken::from_near(1).as_yoctonear());
         testing_env!(donor_ctx.build());
 
+        contract.donate_and_mint(action_id);
+    }
+
+    #[test]
+    #[should_panic(expected = "ERR_ZERO_DEPOSIT")]
+    fn test_donate_rejected_for_zero_amount() {
+        let ctx = get_context(contributor_account(), 0);
+        testing_env!(ctx.build());
+
+        let mut contract = FoodSortContract::new(admin_account(), None);
+        let action_id = contract.submit_action(
+            "COMPOST".to_string(),
+            "Organic Separation".to_string(),
+            "Sorted 4kg of vegetable peels and coffee grounds.".to_string(),
+            "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi".to_string(),
+        );
+
+        let admin_ctx = get_context(admin_account(), 0);
+        testing_env!(admin_ctx.build());
+        contract.verify_action(action_id);
+
+        let donor_ctx = get_context(donor_account(), 0);
+        testing_env!(donor_ctx.build());
         contract.donate_and_mint(action_id);
     }
 
@@ -625,6 +712,7 @@ mod tests {
             summary.treasury_balance_yocto.0,
             record.net_treasury_amount_yocto.0
         );
+        assert_eq!(summary.funds_distributed_yocto.0, 0);
         assert_eq!(
             summary.total_storage_reserved_yocto.0,
             record.storage_cost_yocto.0

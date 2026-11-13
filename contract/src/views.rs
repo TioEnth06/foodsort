@@ -5,7 +5,7 @@ use crate::models::{
 use crate::{FoodSortContract, FoodSortContractExt};
 use near_contract_standards::non_fungible_token::core::NonFungibleTokenCore;
 use near_sdk::json_types::U128;
-use near_sdk::{near, AccountId};
+use near_sdk::{env, near, AccountId};
 
 #[near]
 impl FoodSortContract {
@@ -92,6 +92,7 @@ impl FoodSortContract {
             admin_id: self.admin_id.clone(),
             min_donation_yocto: U128(self.min_donation_yocto),
             treasury_balance_yocto: U128(self.treasury_balance_yocto),
+            funds_distributed_yocto: U128(0),
             total_storage_reserved_yocto: U128(self.total_storage_reserved_yocto),
             treasury_status: TREASURY_STATUS_HELD.to_string(),
             total_actions_count: self.actions.len() as u64,
@@ -109,9 +110,16 @@ impl FoodSortContract {
         let action = self.actions.get(&donation.action_id)?.clone();
 
         let is_held_by_original_donor = nft.owner_id == donation.donor_id;
+        let contract_account = env::current_account_id().to_string();
+        let network = if contract_account.ends_with(".near") {
+            "mainnet".to_string()
+        } else {
+            "testnet".to_string()
+        };
 
         Some(NftVerificationProof {
             token_id,
+            network,
             current_owner_id: nft.owner_id,
             original_donor_id: donation.donor_id.clone(),
             original_contributor_id: action.contributor_id.clone(),

@@ -148,10 +148,15 @@ export const DEMO_DONATIONS: DonationRecord[] = [
   },
 ];
 
-function buildDemoNftToken(donation: DonationRecord, currentOwnerId?: string): Nep171Token {
+function buildDemoNftToken(
+  donation: DonationRecord,
+  currentOwnerId?: string
+): Nep171Token {
   const action = DEMO_ACTIONS.find((a) => a.action_id === donation.action_id)!;
   const extra: DonationNftExtraMetadata = {
     schema_version: "foodsort-nft-v1",
+    token_id: donation.token_id,
+    network: "testnet",
     action_id: action.action_id,
     donation_id: donation.donation_id,
     original_contributor_id: action.contributor_id,
@@ -180,6 +185,7 @@ function buildDemoNftToken(donation: DonationRecord, currentOwnerId?: string): N
       starts_at: String(donation.donated_at_ms),
       updated_at: String(donation.donated_at_ms),
       extra: JSON.stringify(extra),
+      reference: action.evidence_uri,
     },
     is_demo_data: true,
   };
@@ -195,17 +201,23 @@ export const DEMO_TREASURY_SUMMARY: TreasurySummary = {
   admin_id: DEMO_ADMIN_ID,
   min_donation_yocto: "100000000000000000000000",
   treasury_balance_yocto: "8479600000000000000000000",
+  funds_distributed_yocto: "0",
   total_storage_reserved_yocto: "20400000000000000000000",
   treasury_status: "HELD_IN_TREASURY",
   total_actions_count: DEMO_ACTIONS.length,
-  verified_actions_count: DEMO_ACTIONS.filter((a) => a.status === "Verified").length,
-  pending_actions_count: DEMO_ACTIONS.filter((a) => a.status === "Pending").length,
-  rejected_actions_count: DEMO_ACTIONS.filter((a) => a.status === "Rejected").length,
+  verified_actions_count: DEMO_ACTIONS.filter((a) => a.status === "Verified")
+    .length,
+  pending_actions_count: DEMO_ACTIONS.filter((a) => a.status === "Pending")
+    .length,
+  rejected_actions_count: DEMO_ACTIONS.filter((a) => a.status === "Rejected")
+    .length,
   total_donations_count: DEMO_DONATIONS.length,
   is_demo_data: true,
 };
 
-export function getDemoVerificationProof(tokenId: string): NftVerificationProof | null {
+export function getDemoVerificationProof(
+  tokenId: string
+): NftVerificationProof | null {
   const nft = DEMO_NFT_TOKENS.find((t) => t.token_id === tokenId);
   const donation = DEMO_DONATIONS.find((d) => d.token_id === tokenId);
   if (!nft || !donation) return null;
@@ -214,6 +226,7 @@ export function getDemoVerificationProof(tokenId: string): NftVerificationProof 
 
   return {
     token_id: nft.token_id,
+    network: "testnet",
     current_owner_id: nft.owner_id,
     original_donor_id: donation.donor_id,
     original_contributor_id: action.contributor_id,

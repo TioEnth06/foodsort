@@ -7,7 +7,7 @@
     "build": "NEXT_TELEMETRY_DISABLED=1 next build",
     "start": "NEXT_TELEMETRY_DISABLED=1 next start",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint"
+    "lint": "node scripts/lint-check.mjs && tsc --noEmit"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.3",

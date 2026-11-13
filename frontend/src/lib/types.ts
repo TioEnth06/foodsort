@@ -36,6 +36,8 @@ export interface DonationRecord {
 
 export interface DonationNftExtraMetadata {
   schema_version: string;
+  token_id: string;
+  network: string;
   action_id: number;
   donation_id: number;
   original_contributor_id: string;
@@ -61,6 +63,7 @@ export interface Nep177TokenMetadata {
   starts_at?: string | null;
   updated_at?: string | null;
   extra?: string | null;
+  reference?: string | null;
 }
 
 export interface Nep171Token {
@@ -74,6 +77,7 @@ export interface TreasurySummary {
   admin_id: string;
   min_donation_yocto: string;
   treasury_balance_yocto: string;
+  funds_distributed_yocto: string;
   total_storage_reserved_yocto: string;
   treasury_status: "HELD_IN_TREASURY";
   total_actions_count: number;
@@ -86,6 +90,7 @@ export interface TreasurySummary {
 
 export interface NftVerificationProof {
   token_id: string;
+  network: string;
   current_owner_id: string;
   original_donor_id: string;
   original_contributor_id: string;

@@ -121,22 +121,41 @@ export default function HomePage() {
                   <Badge variant="verified">{treasury.treasury_status}</Badge>
                 </div>
 
-                <div className="rounded-xl bg-[#1B4332] text-[#FAF8F5] p-4">
-                  <div className="text-xs text-[#D8F3DC]/80">
-                    Net Donations Held in Contract Treasury
+                <div className="rounded-xl bg-[#1B4332] text-[#FAF8F5] p-4 space-y-3">
+                  <div>
+                    <div className="text-xs text-[#D8F3DC]/80">
+                      Funds Held in Contract Treasury (Net Donations)
+                    </div>
+                    <div className="mt-1 text-3xl font-extrabold font-mono">
+                      {formatYoctoToNear(treasury.treasury_balance_yocto, 4)} NEAR
+                    </div>
                   </div>
-                  <div className="mt-1 text-3xl font-extrabold font-mono">
-                    {formatYoctoToNear(treasury.treasury_balance_yocto, 4)} NEAR
-                  </div>
-                  <div className="mt-2 flex items-center justify-between text-xs text-[#D8F3DC]/90 border-t border-white/15 pt-2 font-mono">
-                    <span>NEP-171 Storage Reserved:</span>
-                    <span>
-                      {formatYoctoToNear(
-                        treasury.total_storage_reserved_yocto,
-                        4
-                      )}{" "}
-                      NEAR
-                    </span>
+
+                  <div className="grid grid-cols-2 gap-2 border-t border-white/15 pt-2.5 text-xs font-mono">
+                    <div>
+                      <span className="block text-[11px] font-sans text-[#D8F3DC]/75">
+                        Funds Distributed:
+                      </span>
+                      <strong className="text-white">
+                        {formatYoctoToNear(
+                          treasury.funds_distributed_yocto || "0",
+                          4
+                        )}{" "}
+                        NEAR (No Disbursement in MVP)
+                      </strong>
+                    </div>
+                    <div className="text-right">
+                      <span className="block text-[11px] font-sans text-[#D8F3DC]/75">
+                        NEP-171 Storage Reserved:
+                      </span>
+                      <strong className="text-[#D8F3DC]">
+                        {formatYoctoToNear(
+                          treasury.total_storage_reserved_yocto,
+                          4
+                        )}{" "}
+                        NEAR
+                      </strong>
+                    </div>
                   </div>
                 </div>
 
@@ -170,10 +189,13 @@ export default function HomePage() {
                 <div className="rounded-xl bg-[#F3EFE6] p-3 text-xs text-[#525B56] flex items-start gap-2">
                   <ShieldCheck className="h-4 w-4 text-[#1B4332] shrink-0 mt-0.5" />
                   <span>
-                    <strong>Non-Distribution Truthfulness:</strong> All net
-                    donations are held transparently in the smart contract
-                    treasury (<code className="font-mono">HELD_IN_TREASURY</code>
-                    ) and are never falsely marked as distributed.
+                    <strong>Funds Held vs. Funds Distributed:</strong> There is
+                    no automated payout/disbursement mechanism in the current
+                    MVP. 100% of net donations remain held transparently in the
+                    smart contract treasury (
+                    <code className="font-mono">HELD_IN_TREASURY</code>) and{" "}
+                    <code className="font-mono">Funds Distributed = 0 NEAR</code>
+                    .
                   </span>
                 </div>
               </div>

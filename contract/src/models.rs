@@ -63,6 +63,8 @@ pub struct DonationRecord {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct DonationNftExtraMetadata {
     pub schema_version: String,
+    pub token_id: String,
+    pub network: String,
     pub action_id: u64,
     pub donation_id: u64,
     pub original_contributor_id: AccountId,
@@ -85,6 +87,7 @@ pub struct TreasurySummary {
     pub admin_id: AccountId,
     pub min_donation_yocto: U128,
     pub treasury_balance_yocto: U128,
+    pub funds_distributed_yocto: U128,
     pub total_storage_reserved_yocto: U128,
     pub treasury_status: String,
     pub total_actions_count: u64,
@@ -98,6 +101,7 @@ pub struct TreasurySummary {
 #[derive(Clone, Debug)]
 pub struct NftVerificationProof {
     pub token_id: String,
+    pub network: String,
     pub current_owner_id: AccountId,
     pub original_donor_id: AccountId,
     pub original_contributor_id: AccountId,
