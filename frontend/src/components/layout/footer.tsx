@@ -18,13 +18,13 @@ export function Footer() {
               </span>
             </div>
             <p className="text-xl sm:text-2xl font-semibold tracking-[-0.02em] text-[#F5F2E9]/90 max-w-md">
-              Sort food. Support change. Collect impact.
+              Sort food — Support change — Collect impact
             </p>
             <p className="text-xs font-mono text-[#F5F2E9]/60 max-w-lg leading-relaxed">
-              Verified food impact, made visible. Original contributor
+              Verified food impact, made visible — Original contributor
               attribution is permanently preserved on-chain, and 100% of net
               donations remain transparently held in the contract treasury (
-              <span className="text-[#C7F36B]">HELD_IN_TREASURY</span>).
+              <span className="text-[#C7F36B]">HELD_IN_TREASURY</span>)
             </p>
           </div>
 
