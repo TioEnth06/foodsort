@@ -11,7 +11,7 @@ This document contains the complete, fact-checked submission materials for **Foo
 - **One-line Description**: FoodSort is a community-powered food impact platform that connects verified real-world food actions with transparent on-chain donations and Donation NFTs.
 - **Hackathon Track**: Sustainability, On-Chain Provenance & AI-Assisted Impact Verification on NEAR Protocol
 - **GitHub Repository URL**: `https://github.com/TioEnth06/foodsort.git`
-- **Live Frontend Demo URL**: `[INSERT LIVE DEMO URL]`
+- **Live Frontend Demo URL**: `https://foodsort.vercel.app`
 - **Demo Walkthrough Video URL**: `[INSERT DEMO VIDEO URL]`
 - **NEAR Network**: NEAR Testnet (`testnet`)
 - **Deployed Smart Contract Address**: `[INSERT ACTUAL CONTRACT ADDRESS]` (default configured in `frontend/.env.example`: `foodsort.testnet`)

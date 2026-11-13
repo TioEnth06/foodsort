@@ -10,7 +10,7 @@ This runbook guides presenters and NEAR Hackathon 2026 judges through a reproduc
 
 ## Pre-Demo Setup (30 Seconds Before Presenting)
 
-1. **Start Frontend Server (or open `[INSERT LIVE DEMO URL]`)**:
+1. **Start Frontend Server (or open `https://foodsort.vercel.app`)**:
    ```bash
    cd frontend
    npm run dev
