@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error:
-            "PINATA_JWT is not configured on the server. Strict IPFS upload requires a valid Pinata API JWT in frontend/.env.local.",
+            "PINATA_JWT is not configured on the server. Add PINATA_JWT in the Vercel/project environment, then redeploy.",
           code: "PINATA_JWT_MISSING",
         },
         { status: 503 }

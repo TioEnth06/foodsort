@@ -71,19 +71,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const provider = (process.env.AI_PROVIDER || "openai").toLowerCase();
     const openaiKey = process.env.OPENAI_API_KEY?.trim();
     const geminiKey = process.env.GEMINI_API_KEY?.trim();
+    // Prefer explicit AI_PROVIDER; otherwise pick whichever key is present.
+    const configuredProvider = (process.env.AI_PROVIDER || "").toLowerCase();
+    const provider =
+      configuredProvider === "gemini" || configuredProvider === "openai"
+        ? configuredProvider
+        : geminiKey
+          ? "gemini"
+          : openaiKey
+            ? "openai"
+            : "";
 
     if (
+      !provider ||
       (provider === "openai" && !openaiKey) ||
-      (provider === "gemini" && !geminiKey) ||
-      (!openaiKey && !geminiKey)
+      (provider === "gemini" && !geminiKey)
     ) {
       return NextResponse.json(
         {
           error:
-            "AI Verification service is currently unavailable because server-side AI credentials (OPENAI_API_KEY or GEMINI_API_KEY) are not configured in frontend/.env.local. Per FoodSort security rules, AI results are never fabricated. Please proceed with manual human admin verification below.",
+            "AI Verification service is currently unavailable because server-side AI credentials (GEMINI_API_KEY or OPENAI_API_KEY) are not configured in the Vercel/project environment. Per FoodSort security rules, AI results are never fabricated. Please proceed with manual human admin verification below.",
           code: "AI_SERVICE_UNAVAILABLE",
           allow_manual_verification: true,
         },
