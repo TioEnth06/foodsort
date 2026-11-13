@@ -22,31 +22,31 @@ const TIMELINE_STAGES = [
     step: "01",
     word: "SORT",
     caption:
-      "Divert organic compost, recover edible surplus, or isolate contaminated residuals at community kitchens and markets.",
+      "Divert organic compost, recover edible surplus, or isolate contaminated residuals at community kitchens and markets",
   },
   {
     step: "02",
     word: "DOCUMENT",
     caption:
-      "Capture photographic evidence and pin immutable metadata to IPFS before registering the action on NEAR.",
+      "Capture photographic evidence and pin immutable metadata to IPFS before registering the action on NEAR",
   },
   {
     step: "03",
     word: "VERIFY",
     caption:
-      "An isolated AI assistant triages consistency and risk flags; a human administrator makes the final on-chain approval.",
+      "An isolated AI assistant triages consistency and risk flags; a human administrator makes the final on-chain approval",
   },
   {
     step: "04",
     word: "SUPPORT",
     caption:
-      "Patrons back verified actions with native NEAR. Net funds are held transparently in the smart contract treasury.",
+      "Patrons back verified actions with native NEAR while net funds are held transparently in the smart contract treasury",
   },
   {
     step: "05",
     word: "PROVE",
     caption:
-      "Every donation mints a NEP-171 provenance certificate that permanently credits the original contributor.",
+      "Every donation mints a NEP-171 provenance certificate that permanently credits the original contributor",
   },
 ];
 
@@ -55,25 +55,25 @@ const PROVENANCE_STAGES = [
     id: "VERIFIED ACTION",
     label: "Stage 01 // Field Execution",
     detail:
-      "Contributor sari-organik.testnet sorts 18.5 kg of market green waste. Verified on-chain by admin.foodsort.testnet.",
+      "Contributor sari-organik.testnet sorts 18.5 kg of market green waste — verified on-chain by admin.foodsort.testnet",
   },
   {
     id: "DONATION",
     label: "Stage 02 // Treasury Support",
     detail:
-      "Patron attaches native NEAR via donate_and_mint(). Storage bytes are separated; net funds stay HELD_IN_TREASURY.",
+      "Patron attaches native NEAR via donate_and_mint() — storage bytes are separated and net funds stay HELD_IN_TREASURY",
   },
   {
     id: "NFT",
     label: "Stage 03 // Archival Certificate",
     detail:
-      "A 1-of-1 NEP-171 / NEP-177 certificate is minted to the patron while locking original_contributor_id in contract state.",
+      "A 1-of-1 NEP-171 / NEP-177 certificate is minted to the patron while locking original_contributor_id in contract state",
   },
   {
     id: "PUBLIC PROOF",
     label: "Stage 04 // Open Verification",
     detail:
-      "Anyone can inspect the certificate without a wallet, distinguishing Contributor ≠ Original Donor ≠ Current Owner.",
+      "Anyone can inspect the certificate without a wallet, distinguishing Contributor ≠ Original Donor ≠ Current Owner",
   },
 ];
 
@@ -129,7 +129,7 @@ export default function HomePage() {
             </div>
 
             <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#18211C]/65">
-              Verified food impact, made visible.
+              Verified food impact, made visible
             </div>
           </div>
 
@@ -142,9 +142,9 @@ export default function HomePage() {
               className="font-extrabold uppercase tracking-[-0.045em] text-[#102A1F] leading-[0.92]"
               style={{ fontSize: "clamp(3.1rem, 8vw, 8.6rem)" }}
             >
-              <span className="block">SORT FOOD.</span>
-              <span className="block text-[#6F8F45]">SUPPORT CHANGE.</span>
-              <span className="block">COLLECT IMPACT.</span>
+              <span className="block">SORT FOOD</span>
+              <span className="block text-[#6F8F45]">SUPPORT CHANGE</span>
+              <span className="block">COLLECT IMPACT</span>
             </motion.h1>
           </div>
 
@@ -158,7 +158,7 @@ export default function HomePage() {
             >
               <p className="text-lg sm:text-xl text-[#18211C]/85 leading-relaxed font-normal max-w-xl">
                 Turn real-world food-sorting actions into verified, supportable
-                impact — with transparent provenance on NEAR.
+                impact — with transparent provenance on NEAR
               </p>
 
               <div className="flex flex-wrap items-center gap-4">
@@ -297,7 +297,7 @@ export default function HomePage() {
       </section>
 
       {/* =====================================================================
-          SECTION 01 — Real actions deserve real visibility.
+          SECTION 01 — Real actions deserve real visibility
       ====================================================================== */}
       <section className="mx-auto max-w-[1440px] px-4 py-24 sm:px-8 lg:px-12 border-b border-[#102A1F]/12">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 items-center">
@@ -306,20 +306,20 @@ export default function HomePage() {
               01 // THE VISIBILITY GAP
             </div>
             <h2 className="text-4xl sm:text-6xl font-extrabold tracking-[-0.035em] text-[#102A1F] leading-[1.04]">
-              Real actions deserve real visibility.
+              Real actions deserve real visibility
             </h2>
             <p className="text-base sm:text-lg text-[#18211C]/80 leading-relaxed max-w-xl">
               Every day, community kitchens, local markets, and households sort
               organic waste, recover surplus food, and isolate contaminants
-              before they reach landfills. Yet this physical work goes unseen,
-              unverified, and unsupported—or worse, when patronage occurs,
-              existing platforms credit the financial donor instead of the
-              person who performed the sorting.
+              before they reach landfills — yet this physical work goes unseen,
+              unverified, and unsupported, or when patronage occurs, existing
+              platforms credit the financial donor instead of the person who
+              performed the sorting
             </p>
             <p className="text-sm font-mono text-[#102A1F] border-l-2 border-[#6F8F45] pl-4 py-1">
               FoodSort turns each verified sorting batch into an auditable
               on-chain record where original contributor attribution is never
-              overwritten.
+              overwritten
             </p>
           </div>
 
@@ -348,7 +348,7 @@ export default function HomePage() {
                 <div className="font-semibold text-[#102A1F]">
                   SURPLUS RECOVERY
                 </div>
-                <div>Unspoiled portions documented prior to redistribution.</div>
+                <div>Unspoiled portions documented prior to redistribution</div>
               </div>
             </div>
           </div>
@@ -356,7 +356,7 @@ export default function HomePage() {
       </section>
 
       {/* =====================================================================
-          SECTION 02 — From action to proof. (Typographic Timeline)
+          SECTION 02 — From action to proof (Typographic Timeline)
       ====================================================================== */}
       <section
         id="how-it-works"
@@ -368,7 +368,7 @@ export default function HomePage() {
               02 // PROTOCOL SEQUENCE
             </div>
             <h2 className="mt-2 text-4xl sm:text-6xl font-extrabold tracking-[-0.035em] text-[#102A1F]">
-              From action to proof.
+              From action to proof
             </h2>
           </div>
           <p className="font-mono text-xs uppercase tracking-[0.14em] text-[#18211C]/65 max-w-xs">
@@ -401,7 +401,7 @@ export default function HomePage() {
       </section>
 
       {/* =====================================================================
-          SECTION 03 — AI assists. Humans decide. (Split-Screen Governance)
+          SECTION 03 — AI assists / Humans decide (Split-Screen Governance)
       ====================================================================== */}
       <section className="mx-auto max-w-[1440px] px-4 py-24 sm:px-8 lg:px-12 border-b border-[#102A1F]/12">
         <div className="max-w-3xl space-y-3 pb-14">
@@ -409,13 +409,14 @@ export default function HomePage() {
             03 // HUMAN-IN-THE-LOOP VERIFICATION
           </div>
           <h2 className="text-4xl sm:text-6xl font-extrabold tracking-[-0.035em] text-[#102A1F]">
-            AI assists. Humans decide.
+            AI assists — Humans decide
           </h2>
           <p className="text-base sm:text-lg text-[#18211C]/80 leading-relaxed">
             Our isolated AI Verification Assistant evaluates untrusted
             descriptions and evidence photography for category consistency and
-            risk flags—but it has zero wallet access and never executes
-            transactions. Human administrators hold final authority on-chain.
+            risk flags — yet it has zero wallet access and never executes
+            transactions while human administrators hold final authority
+            on-chain
           </p>
         </div>
 
@@ -446,7 +447,7 @@ export default function HomePage() {
               <p className="font-sans text-sm text-[#F5F2E9]/90 leading-relaxed">
                 &ldquo;Separated 6.2 kg of household kitchen scraps (banana
                 peels, eggshells, wilted greens) into bokashi fermentation
-                buckets.&rdquo;
+                buckets&rdquo;
               </p>
             </div>
           </div>
@@ -531,7 +532,7 @@ export default function HomePage() {
                       {treasury.admin_id}
                     </code>{" "}
                     can sign <code className="font-mono">verify_action()</code>{" "}
-                    on NEAR.
+                    on NEAR
                   </p>
                 </div>
                 <Link
@@ -557,7 +558,7 @@ export default function HomePage() {
               04 // VERIFIED FIELD ARCHIVE
             </div>
             <h2 className="mt-2 text-4xl sm:text-6xl font-extrabold tracking-[-0.035em] text-[#102A1F]">
-              Verified Actions.
+              Verified Actions
             </h2>
           </div>
           <Link
@@ -641,7 +642,7 @@ export default function HomePage() {
                   </div>
 
                   <p className="text-sm sm:text-base text-[#18211C]/80 leading-relaxed">
-                    {act.description}
+                    {act.description.replace(/\.+$/, "")}
                   </p>
 
                   <div className="grid grid-cols-2 gap-4 border-y border-[#102A1F]/15 py-4 font-mono text-xs">
@@ -693,13 +694,13 @@ export default function HomePage() {
                 05 // PATRONAGE PROVENANCE
               </div>
               <h2 className="text-4xl sm:text-5xl font-extrabold tracking-[-0.035em] text-[#102A1F] leading-[1.06]">
-                Support an action. Carry its provenance.
+                Support an action — Carry its provenance
               </h2>
               <p className="text-base text-[#18211C]/80 leading-relaxed">
-                A FoodSort Donation NFT is not a speculative collectible. It is
+                A FoodSort Donation NFT is not a speculative collectible — it is
                 an archival certificate of support that proves your native NEAR
                 patronage while permanently preserving the original
-                contributor&apos;s identity on-chain.
+                contributor&apos;s identity on-chain
               </p>
             </div>
 
@@ -861,14 +862,14 @@ export default function HomePage() {
                 06 // WALTLESS PUBLIC PROVENANCE
               </div>
               <h2 className="text-4xl sm:text-6xl font-extrabold tracking-[-0.035em] text-[#F5F2E9] leading-[1.05]">
-                Nothing important should be hidden behind a dashboard.
+                Nothing important should be hidden behind a dashboard
               </h2>
               <p className="text-base sm:text-lg text-[#F5F2E9]/75 leading-relaxed max-w-xl">
                 Every verified action and patronage record can be inspected
-                through its public provenance—without connecting a wallet. Even
+                through its public provenance without connecting a wallet — even
                 if a Donation NFT is transferred to a secondary holder, the
                 record never conflates the current owner with the original donor
-                or contributor.
+                or contributor
               </p>
               <div className="pt-2">
                 <Link
@@ -958,8 +959,8 @@ export default function HomePage() {
               <div className="font-mono text-xs text-[#F5F2E9]/65 flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-[#C7F36B]" />
                 <span>
-                  Truthfulness Invariant: Funds Held vs. Funds Distributed are
-                  explicitly separated.
+                  Truthfulness Invariant: Funds Held vs Funds Distributed are
+                  explicitly separated
                 </span>
               </div>
             </div>
@@ -1022,7 +1023,7 @@ export default function HomePage() {
               08 // STANDARDIZED TAXONOMY
             </div>
             <h2 className="mt-2 text-4xl sm:text-6xl font-extrabold tracking-[-0.035em] text-[#102A1F]">
-              Three Sorting Streams.
+              Three Sorting Streams
             </h2>
           </div>
 
@@ -1032,19 +1033,19 @@ export default function HomePage() {
                 num: "01",
                 code: "COMPOST",
                 title: "COMPOST",
-                desc: "Organic material diverted into composting—vegetable trimmings, fruit peels, coffee grounds, and clean green matter kept out of methane-producing landfills.",
+                desc: "Organic material diverted into composting — vegetable trimmings, fruit peels, coffee grounds, and clean green matter kept out of methane-producing landfills",
               },
               {
                 num: "02",
                 code: "FOOD_RESCUE",
                 title: "FOOD RESCUE",
-                desc: "Safe-to-handle surplus recovery activities—unspoiled bakery loaves, grade-A market produce, and portioned surplus documented prior to community redistribution.",
+                desc: "Safe-to-handle surplus recovery activities — unspoiled bakery loaves, grade-A market produce, and portioned surplus documented prior to community redistribution",
               },
               {
                 num: "03",
                 code: "RESIDUAL",
                 title: "RESIDUAL",
-                desc: "Contaminated or residual material separated from recoverable streams—isolating oil-soaked liners and multilayer sachets so organic compost batches stay pure.",
+                desc: "Contaminated or residual material separated from recoverable streams — isolating oil-soaked liners and multilayer sachets so organic compost batches stay pure",
               },
             ].map((stream) => (
               <div
@@ -1073,7 +1074,7 @@ export default function HomePage() {
               09 // END-TO-END TRACEABILITY
             </div>
             <h2 className="text-3xl sm:text-5xl font-extrabold tracking-[-0.035em] text-[#102A1F]">
-              Impact should be something you can trace.
+              Impact should be something you can trace
             </h2>
           </div>
 
@@ -1121,7 +1122,7 @@ export default function HomePage() {
             className="font-extrabold tracking-[-0.04em] text-[#F5F2E9] leading-[0.96] max-w-4xl mx-auto"
             style={{ fontSize: "clamp(2.75rem, 6.5vw, 6.5rem)" }}
           >
-            Make the next action visible.
+            Make the next action visible
           </h2>
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
