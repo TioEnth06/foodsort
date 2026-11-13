@@ -12,6 +12,7 @@ import { NEAR_CONFIG } from "./config";
 import {
   fetchTransactionOutcome,
   getOnChainActions,
+  getOnChainDonationByTokenId,
   getOnChainDonationsByDonor,
   getOnChainNftTokens,
   getOnChainTreasurySummary,
@@ -205,6 +206,16 @@ export function NearWalletProvider({
         getOnChainNftTokens(50),
       ]);
 
+      // Public donation list for landing/verify: resolve from minted NFT tokens.
+      // Connected-wallet portfolio still comes from get_donations_by_donor.
+      const publicDonations = (
+        await Promise.all(
+          chainTokens.map((token) =>
+            getOnChainDonationByTokenId(token.token_id).catch(() => null)
+          )
+        )
+      ).filter((d): d is DonationRecord => Boolean(d));
+
       let donorRecords: DonationRecord[] = [];
       if (accountId) {
         donorRecords = await getOnChainDonationsByDonor(accountId).catch(
@@ -212,10 +223,20 @@ export function NearWalletProvider({
         );
       }
 
+      const donationById = new Map<number, DonationRecord>();
+      for (const d of [...publicDonations, ...donorRecords]) {
+        donationById.set(d.donation_id, d);
+      }
+
       setTreasury({ ...chainSummary, is_demo_data: false });
       setActions(chainActions.map((a) => ({ ...a, is_demo_data: false })));
       setNftTokens(chainTokens.map((t) => ({ ...t, is_demo_data: false })));
-      setDonations(donorRecords.map((d) => ({ ...d, is_demo_data: false })));
+      setDonations(
+        Array.from(donationById.values()).map((d) => ({
+          ...d,
+          is_demo_data: false,
+        }))
+      );
       setIsUsingDemoData(false);
       setChainConnectionError(null);
     } catch (err) {
@@ -267,7 +288,7 @@ export function NearWalletProvider({
       (!clean.endsWith(".testnet") && !/^[0-9a-f]{64}$/.test(clean))
     ) {
       setWalletInputError(
-        "Please enter a valid NEAR Testnet account ID (e.g., alice.testnet or admin.foodsort.testnet)."
+        "Please enter a valid NEAR Testnet account ID (e.g., alice.testnet)."
       );
       return;
     }
@@ -492,7 +513,7 @@ export function NearWalletProvider({
             className="space-y-3"
           >
             <Input
-              placeholder="e.g. sari-organik.testnet or admin.foodsort.testnet"
+              placeholder={`e.g. alice.testnet or ${NEAR_CONFIG.contractId}`}
               value={accountInput}
               onChange={(e) => setAccountInput(e.target.value)}
             />
@@ -503,12 +524,14 @@ export function NearWalletProvider({
             )}
             <div className="flex flex-wrap gap-1.5 pt-1">
               <span className="text-[11px] text-[#525B56] self-center mr-1">
-                Quick Testnet presets:
+                Live testnet presets:
               </span>
               {[
-                { label: "Contributor", id: "sari-organik.testnet" },
-                { label: "Donor", id: "green-patron.testnet" },
-                { label: "Admin", id: "admin.foodsort.testnet" },
+                {
+                  label: "Contributor / donor",
+                  id: "foodsort-contrib-6146.testnet",
+                },
+                { label: "Admin", id: NEAR_CONFIG.contractId },
               ].map((preset) => (
                 <button
                   key={preset.id}
@@ -525,6 +548,10 @@ export function NearWalletProvider({
                 </button>
               ))}
             </div>
+            <p className="text-[11px] text-[#525B56] leading-relaxed">
+              Soft-connect shows portfolio views. Signing transactions still
+              requires MyNearWallet on testnet.
+            </p>
             <Button type="submit" variant="secondary" className="w-full">
               Connect NEAR Testnet Account
             </Button>

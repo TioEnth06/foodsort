@@ -9,7 +9,7 @@ This document records the complete test plan, test environment, test accounts, p
 ### 1.1 Test Environment
 - **Target Blockchain Network**: NEAR Testnet (`testnet`)
 - **RPC Endpoint**: `https://rpc.testnet.near.org`
-- **Target Contract Account**: `foodsort.testnet`
+- **Target Contract Account**: `foodsort-app-86051.testnet`
 - **Frontend Runtime**: Next.js 15.2.4 (App Router), React 19, TypeScript 5.8.2, Node.js v22.23.4
 - **Smart Contract Runtime**: Rust (`near-sdk = "5.5.0"`, `near-contract-standards = "5.5.0"`, NEP-171, NEP-177, NEP-181)
 - **Automated Test Runner**: `node scripts/run-release-tests.mjs` & `node contract/tests/verify-contract-invariants.mjs`
@@ -17,7 +17,7 @@ This document records the complete test plan, test environment, test accounts, p
 ### 1.2 Standardized Test Accounts
 | Role | Account ID | Purpose |
 | :--- | :--- | :--- |
-| **Contract Administrator** | `admin.foodsort.testnet` / `admin.testnet` | Authorized to execute `verify_action()` and `reject_action()` |
+| **Contract Administrator** | `foodsort-app-86051.testnet` | Authorized to execute `verify_action()` and `reject_action()` |
 | **Contributor 1 (Compost)** | `sari-organik.testnet` / `alice.testnet` | Submits `COMPOST` food-sorting actions |
 | **Contributor 2 (Food Rescue)** | `dapur-berbagi.testnet` | Submits `FOOD_RESCUE` surplus sorting actions |
 | **Contributor 3 (Residual)** | `warung-hijau.testnet` | Submits `RESIDUAL` contamination separation actions |
@@ -28,7 +28,7 @@ This document records the complete test plan, test environment, test accounts, p
 
 ### 1.3 Prerequisites & Environment Variables
 - `NEXT_PUBLIC_NEAR_NETWORK=testnet`
-- `NEXT_PUBLIC_CONTRACT_ID=foodsort.testnet`
+- `NEXT_PUBLIC_CONTRACT_ID=foodsort-app-86051.testnet`
 - `NEXT_PUBLIC_NEAR_RPC_URL=https://rpc.testnet.near.org`
 - `NEXT_PUBLIC_NEAR_EXPLORER_URL=https://testnet.nearblocks.io`
 - `PINATA_JWT` (Server-side only for `/api/upload`; returns `503 PINATA_JWT_MISSING` if unset)

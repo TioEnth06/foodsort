@@ -222,16 +222,11 @@ export default function DonorDashboardPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => connectWithTestnetAccount("green-patron.testnet")}
+                onClick={() =>
+                  connectWithTestnetAccount("foodsort-contrib-6146.testnet")
+                }
               >
-                Try sample donor
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => connectWithTestnetAccount("empty-wallet.testnet")}
-              >
-                Try empty wallet
+                Try live contributor wallet
               </Button>
             </div>
           </Card>
@@ -250,9 +245,11 @@ export default function DonorDashboardPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => connectWithTestnetAccount("green-patron.testnet")}
+                onClick={() =>
+                  connectWithTestnetAccount("foodsort-contrib-6146.testnet")
+                }
               >
-                Try sample donor
+                Try live contributor wallet
               </Button>
             </div>
           </Card>

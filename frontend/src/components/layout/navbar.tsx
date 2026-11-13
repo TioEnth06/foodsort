@@ -21,7 +21,13 @@ export function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { accountId, openWalletModal, disconnectWallet } = useNearWallet();
+  const {
+    accountId,
+    openWalletModal,
+    disconnectWallet,
+    isUsingDemoData,
+    isLoadingChain,
+  } = useNearWallet();
 
   useEffect(() => {
     const onScroll = () => {
@@ -42,12 +48,36 @@ export function Navbar() {
       )}
     >
       <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 sm:px-10 lg:px-16">
-        <Link
-          href="/"
-          className="text-xl font-bold tracking-[-0.04em] text-[#102A1F]"
-        >
-          FoodSort
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/"
+            className="text-xl font-bold tracking-[-0.04em] text-[#102A1F]"
+          >
+            FoodSort
+          </Link>
+          <span
+            className={`hidden sm:inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] ${
+              isUsingDemoData
+                ? "bg-amber-50 text-amber-900"
+                : "bg-[#102A1F]/8 text-[#102A1F]"
+            }`}
+          >
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${
+                isLoadingChain
+                  ? "bg-[#6F8F45] animate-pulse"
+                  : isUsingDemoData
+                    ? "bg-amber-500"
+                    : "bg-[#6F8F45]"
+              }`}
+            />
+            {isLoadingChain
+              ? "Connecting"
+              : isUsingDemoData
+                ? "Example data"
+                : "NEAR testnet"}
+          </span>
+        </div>
 
         <nav
           aria-label="Primary Navigation"

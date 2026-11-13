@@ -17,7 +17,7 @@ This runbook guides presenters and NEAR Hackathon 2026 judges through a reproduc
    ```
    Open `http://localhost:3000`.
 2. **Environment Keys Check (`frontend/.env.local`)**:
-   - `NEXT_PUBLIC_CONTRACT_ID=foodsort.testnet` (or `[INSERT ACTUAL CONTRACT ADDRESS]`)
+   - `NEXT_PUBLIC_CONTRACT_ID=foodsort-app-86051.testnet`
    - `PINATA_JWT=[INSERT PINATA JWT]` (for live IPFS pinning on `/contribute`)
    - `OPENAI_API_KEY=[INSERT OPENAI API KEY]` or `GEMINI_API_KEY=[INSERT GEMINI API KEY]` (for live AI evidence analysis on `/admin`)
    - *Graceful Demo Fallback*: If presenting without live external keys or before contract deployment, the top navbar clearly badges `DEMO DATA PREVIEW` for read views, and `/admin` demonstrates graceful manual fallback when AI is unavailable.
@@ -55,7 +55,7 @@ This runbook guides presenters and NEAR Hackathon 2026 judges through a reproduc
 ### 1:10 – 1:55 | Steps 2, 3 & 4: AI-Assisted Verification + Human Admin Approval (`/admin`)
 1. **Navigate to `Admin Review` (`/admin`)**:
    - Show that while connected as a non-admin (`sari-organik.testnet`), the **Approve / Reject** buttons are locked and backed by `assert_admin()` (`ERR_NOT_ADMIN`) in the Rust contract.
-   - Click **`Switch to admin.foodsort.testnet`** in the top-right status card.
+   - Soft-connect as **`foodsort-app-86051.testnet`** (admin) or sign with MyNearWallet as that account.
 2. **Run AI Verification Assistant (`Prompt #6.5`)**:
    - On pending Action `#103` (`COMPOST` by `budi-kompos.testnet`) or `#104` (`RESIDUAL` by `warung-hijau.testnet`), click **"Run AI Evidence Analysis"**.
    - Explain the core governance distinction:

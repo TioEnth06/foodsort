@@ -7,7 +7,7 @@
 Repository: [https://github.com/TioEnth06/foodsort.git](https://github.com/TioEnth06/foodsort.git)  
 Live Demo URL: [https://foodsort.vercel.app](https://foodsort.vercel.app)  
 Demo Video URL: `[INSERT DEMO VIDEO URL]`  
-Deployed NEAR Testnet Contract: `[INSERT ACTUAL CONTRACT ADDRESS]` (default configured target: `foodsort.testnet`)
+Deployed NEAR Testnet Contract: `foodsort-app-86051.testnet` — see `docs/TESTNET.md`
 
 ---
 
@@ -88,7 +88,7 @@ Copy `frontend/.env.example` to `frontend/.env.local`:
 ```bash
 # NEAR Testnet Configuration
 NEXT_PUBLIC_NEAR_NETWORK=testnet
-NEXT_PUBLIC_CONTRACT_ID=foodsort.testnet
+NEXT_PUBLIC_CONTRACT_ID=foodsort-app-86051.testnet
 NEXT_PUBLIC_NEAR_RPC_URL=https://rpc.testnet.near.org
 NEXT_PUBLIC_NEAR_EXPLORER_URL=https://testnet.nearblocks.io
 NEXT_PUBLIC_NEAR_WALLET_URL=https://testnet.mynearwallet.com
@@ -140,5 +140,5 @@ npm run build
 
 ```bash
 # Compiles contract/ to wasm32-unknown-unknown and deploys/initializes via NEAR CLI
-CONTRACT_ID="foodsort.testnet" ADMIN_ID="admin.foodsort.testnet" bash scripts/deploy-near-testnet.sh
+CONTRACT_ID="foodsort-app-86051.testnet" ADMIN_ID="foodsort-app-86051.testnet" bash scripts/deploy-near-testnet.sh
 ```

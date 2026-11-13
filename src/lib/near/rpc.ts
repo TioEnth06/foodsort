@@ -190,6 +190,14 @@ export async function getOnChainDonationsByDonor(
   });
 }
 
+export async function getOnChainDonationByTokenId(
+  tokenId: string
+): Promise<DonationRecord | null> {
+  return callNearView<DonationRecord | null>("get_donation_by_token_id", {
+    token_id: tokenId,
+  });
+}
+
 export async function getOnChainDonationsByAction(
   actionId: number
 ): Promise<DonationRecord[]> {

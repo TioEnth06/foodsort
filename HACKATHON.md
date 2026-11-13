@@ -8,7 +8,7 @@
 - **Repository**: [https://github.com/TioEnth06/foodsort.git](https://github.com/TioEnth06/foodsort.git)
 - **Live Demo URL**: [https://foodsort.vercel.app](https://foodsort.vercel.app)
 - **Demo Video URL**: `[INSERT DEMO VIDEO URL]`
-- **NEAR Testnet Contract Address**: `[INSERT ACTUAL CONTRACT ADDRESS]` (configured default in code: `foodsort.testnet`)
+- **NEAR Testnet Contract Address**: `foodsort-app-86051.testnet` (see `docs/TESTNET.md`)
 
 ---
 

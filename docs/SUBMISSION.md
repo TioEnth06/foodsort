@@ -14,7 +14,7 @@ This document contains the complete, fact-checked submission materials for **Foo
 - **Live Frontend Demo URL**: `https://foodsort.vercel.app`
 - **Demo Walkthrough Video URL**: `[INSERT DEMO VIDEO URL]`
 - **NEAR Network**: NEAR Testnet (`testnet`)
-- **Deployed Smart Contract Address**: `[INSERT ACTUAL CONTRACT ADDRESS]` (default configured in `frontend/.env.example`: `foodsort.testnet`)
+- **Deployed Smart Contract Address**: `foodsort-app-86051.testnet` (see `docs/TESTNET.md`)
 - **Sample Verified Action Transaction Hash**: `[INSERT ACTUAL SUBMIT/VERIFY TX HASH]`
 - **Sample `donate_and_mint` Transaction Hash**: `[INSERT ACTUAL DONATE_AND_MINT TX HASH]`
 
