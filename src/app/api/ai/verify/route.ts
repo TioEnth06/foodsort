@@ -137,7 +137,7 @@ CRITICAL SECURITY & POLICY CONSTRAINTS:
       },
     });
 
-    let rawJsonResult: Record<string, unknown>;
+    let rawJsonResult: Record<string, unknown> = {};
     let modelUsed = process.env.AI_MODEL || "gpt-4o-mini";
 
     if (openaiKey && provider !== "gemini") {
@@ -191,10 +191,23 @@ CRITICAL SECURITY & POLICY CONSTRAINTS:
       const content = completion.choices?.[0]?.message?.content || "{}";
       rawJsonResult = JSON.parse(content) as Record<string, unknown>;
     } else {
-      modelUsed =
+      const requestedModel =
         process.env.AI_MODEL && !process.env.AI_MODEL.startsWith("gpt-")
-          ? process.env.AI_MODEL
-          : "gemini-2.0-flash";
+          ? process.env.AI_MODEL.trim()
+          : "gemini-3.6-flash";
+
+      const candidateModels = Array.from(
+        new Set([
+          requestedModel === "gemini-2.0-flash" ||
+          requestedModel === "gemini-2.5-flash"
+            ? "gemini-3.6-flash"
+            : requestedModel,
+          "gemini-3.6-flash",
+          "gemini-3.5-flash",
+          "gemini-3.8-flash",
+          "gemini-3.1-flash-lite",
+        ])
+      );
 
       const parts: Array<Record<string, unknown>> = [
         {
@@ -223,45 +236,60 @@ CRITICAL SECURITY & POLICY CONSTRAINTS:
         // Proceed with URI + metadata analysis if remote image fetch times out
       }
 
-      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelUsed}:generateContent?key=${geminiKey}`;
-      const response = await fetch(geminiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: systemPrompt }] },
-          generationConfig: {
-            temperature: 0.1,
-            responseMimeType: "application/json",
-          },
-          contents: [
-            {
-              role: "user",
-              parts,
-            },
-          ],
-        }),
-      });
+      let geminiSucceeded = false;
+      let lastGeminiStatus = 503;
+      let lastGeminiErrorText = "Gemini API error";
 
-      if (!response.ok) {
-        const errText = await response.text().catch(() => "Gemini API error");
+      for (const candidateModel of candidateModels) {
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${candidateModel}:generateContent?key=${geminiKey}`;
+        const response = await fetch(geminiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+            generationConfig: {
+              temperature: 0.1,
+              responseMimeType: "application/json",
+            },
+            contents: [
+              {
+                role: "user",
+                parts,
+              },
+            ],
+          }),
+        });
+
+        if (response.ok) {
+          const geminiData = (await response.json()) as {
+            candidates?: Array<{
+              content?: { parts?: Array<{ text?: string }> };
+            }>;
+          };
+          const text =
+            geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+          rawJsonResult = JSON.parse(text) as Record<string, unknown>;
+          modelUsed = candidateModel;
+          geminiSucceeded = true;
+          break;
+        }
+
+        lastGeminiStatus = response.status;
+        lastGeminiErrorText = await response
+          .text()
+          .catch(() => "Gemini API error");
+      }
+
+      if (!geminiSucceeded) {
         return NextResponse.json(
           {
-            error: `Upstream Gemini provider returned HTTP ${response.status}: ${errText}. Manual human verification remains available.`,
+            error: `Upstream Gemini provider returned HTTP ${lastGeminiStatus}: ${lastGeminiErrorText}. Manual human verification remains available.`,
             code: "AI_UPSTREAM_ERROR",
             allow_manual_verification: true,
           },
           { status: 503 }
         );
       }
-
-      const geminiData = (await response.json()) as {
-        candidates?: Array<{
-          content?: { parts?: Array<{ text?: string }> };
-        }>;
-      };
-      const text =
-        geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
-      rawJsonResult = JSON.parse(text) as Record<string, unknown>;
     }
 
     const structuredResult = normalizeAndValidateAiResult(
