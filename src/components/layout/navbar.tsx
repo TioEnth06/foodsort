@@ -1,190 +1,194 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useNearWallet } from "@/lib/near/wallet-provider";
-import { NEAR_CONFIG } from "@/lib/near/config";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { cn, formatYoctoToNear } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import {
-  AlertCircle,
+  ArrowUpRight,
   Database,
-  Leaf,
   LogOut,
   Menu,
   RefreshCw,
-  ShieldCheck,
-  Wallet,
   X,
 } from "lucide-react";
 
-const NAV_LINKS = [
-  { href: "/", label: "Overview" },
-  { href: "/actions", label: "Explore Actions" },
+const PRIMARY_NAV = [
+  { href: "/actions", label: "Explore" },
+  { href: "/#how-it-works", label: "How It Works" },
+  { href: "/#impact", label: "Impact" },
+  { href: "/verify", label: "Verify" },
+];
+
+const APP_ROUTES = [
   { href: "/contribute", label: "Contribute" },
   { href: "/donor", label: "Donor Hub" },
-  { href: "/admin", label: "Admin Review" },
-  { href: "/verify", label: "NFT Gallery & Verify" },
+  { href: "/admin", label: "Admin" },
 ];
 
 export function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const {
     accountId,
     openWalletModal,
     disconnectWallet,
-    treasury,
     isUsingDemoData,
     isLoadingChain,
     refreshChainData,
     toggleDemoPreviewMode,
   } = useNearWallet();
 
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-40 border-b border-[#1B4332]/15 bg-[#FAF8F5]/95 backdrop-blur-md">
-      <div
-        className={cn(
-          "border-b px-4 py-1.5 text-xs transition-colors",
-          isUsingDemoData
-            ? "border-amber-300 bg-amber-50 text-amber-950"
-            : "border-[#40916C]/30 bg-[#D8F3DC]/60 text-[#1B4332]"
-        )}
-      >
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            {isUsingDemoData ? (
-              <>
-                <Badge variant="demo">DEMO DATA PREVIEW</Badge>
-                <span>
-                  Viewing clearly labeled demo records (`{NEAR_CONFIG.contractId}` on
-                  NEAR Testnet). No fake transactions are ever simulated.
-                </span>
-              </>
-            ) : (
-              <>
-                <Badge variant="verified">LIVE ON-CHAIN STATE</Badge>
-                <span>
-                  Connected to NEAR Testnet contract{" "}
-                  <code className="font-mono font-semibold">
-                    {NEAR_CONFIG.contractId}
-                  </code>
-                </span>
-              </>
-            )}
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className="hidden sm:inline-flex items-center gap-1 font-medium text-[#1B4332]">
-              <ShieldCheck className="h-3.5 w-3.5 text-[#40916C]" />
-              Treasury:{" "}
-              <strong className="font-mono">
-                {formatYoctoToNear(treasury.treasury_balance_yocto, 4)} NEAR
-              </strong>{" "}
-              (HELD_IN_TREASURY)
+    <header
+      className={cn(
+        "sticky top-0 z-40 transition-all duration-300",
+        scrolled
+          ? "border-b border-[#102A1F]/12 bg-[#F5F2E9]/95 backdrop-blur-md shadow-[0_1px_0_rgba(16,42,31,0.05)]"
+          : "border-b border-[#102A1F]/8 bg-[#F5F2E9]/70 backdrop-blur-sm"
+      )}
+    >
+      <div className="mx-auto flex max-w-[1440px] items-center justify-between px-4 py-3.5 sm:px-8 lg:px-12">
+        {/* Left: Wordmark */}
+        <div className="flex items-center gap-4">
+          <Link
+            href="/"
+            className="group flex items-baseline gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6F8F45] rounded-sm"
+          >
+            <span className="text-xl font-extrabold tracking-[-0.04em] text-[#102A1F]">
+              FoodSort
             </span>
+            <span className="hidden sm:inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-[#18211C]/65">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#6F8F45]" />
+              NEAR
+            </span>
+          </Link>
 
-            <button
-              type="button"
-              onClick={() => toggleDemoPreviewMode(!isUsingDemoData)}
-              className="inline-flex items-center gap-1 rounded-md border border-[#1B4332]/20 bg-white/80 px-2 py-0.5 text-[11px] font-medium text-[#1C1F1E] hover:bg-white cursor-pointer"
-            >
-              <Database className="h-3 w-3 text-[#40916C]" />
-              {isUsingDemoData ? "Try Live RPC" : "Switch to Demo Preview"}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => void refreshChainData()}
-              className="inline-flex items-center gap-1 rounded-md p-1 text-[#1B4332] hover:bg-[#1B4332]/10 cursor-pointer"
-              title="Refresh NEAR Testnet RPC data"
-            >
-              <RefreshCw
-                className={cn("h-3.5 w-3.5", isLoadingChain && "animate-spin")}
-              />
-            </button>
-          </div>
+          {/* Subtle Truthfulness Data-Source Pill */}
+          <button
+            type="button"
+            onClick={() => toggleDemoPreviewMode(!isUsingDemoData)}
+            title="Switch between Demo Preview and Live NEAR Testnet RPC"
+            className="hidden xl:inline-flex items-center gap-1.5 rounded-full border border-[#102A1F]/15 bg-white/60 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[#18211C]/80 hover:border-[#102A1F]/40 hover:bg-white transition-colors cursor-pointer"
+          >
+            <Database className="h-3 w-3 text-[#6F8F45]" />
+            <span>{isUsingDemoData ? "Demo Data Mode" : "Live RPC State"}</span>
+          </button>
         </div>
-      </div>
 
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1B4332] text-[#FAF8F5] shadow-xs group-hover:bg-[#40916C] transition-colors">
-            <Leaf className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-lg font-bold tracking-tight text-[#1B4332]">
-                FoodSort
-              </span>
-              <span className="rounded-md bg-[#D8F3DC] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#1B4332]">
-                NEAR Testnet
-              </span>
-            </div>
-            <p className="text-[11px] text-[#525B56] hidden sm:block">
-              Verifiable Food-Sorting & NEP-171 Patronage
-            </p>
-          </div>
-        </Link>
-
-        <nav className="hidden lg:flex items-center gap-1">
-          {NAV_LINKS.map((item) => {
+        {/* Center/Right: Minimal Editorial Navigation */}
+        <nav
+          aria-label="Primary Navigation"
+          className="hidden lg:flex items-center gap-7"
+        >
+          {PRIMARY_NAV.map((item) => {
             const isActive =
-              item.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(item.href);
+              item.href === "/actions"
+                ? pathname.startsWith("/actions") ||
+                  pathname.startsWith("/explore")
+                : item.href === "/verify"
+                  ? pathname.startsWith("/verify")
+                  : false;
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "rounded-xl px-3.5 py-2 text-sm font-medium transition-colors",
+                  "editorial-link text-sm font-medium tracking-[-0.01em] transition-colors py-1",
                   isActive
-                    ? "bg-[#1B4332] text-[#FAF8F5]"
-                    : "text-[#1C1F1E]/80 hover:bg-[#D8F3DC]/60 hover:text-[#1B4332]"
+                    ? "text-[#102A1F] font-semibold"
+                    : "text-[#18211C]/75 hover:text-[#102A1F]"
                 )}
               >
                 {item.label}
               </Link>
             );
           })}
+
+          <span
+            className="h-3.5 w-[1px] bg-[#102A1F]/15"
+            aria-hidden="true"
+          />
+
+          <div className="flex items-center gap-4">
+            {APP_ROUTES.map((item) => {
+              const isActive = pathname.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "font-mono text-xs uppercase tracking-[0.1em] transition-colors py-1",
+                    isActive
+                      ? "text-[#102A1F] font-bold underline underline-offset-4"
+                      : "text-[#18211C]/65 hover:text-[#102A1F]"
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
         </nav>
 
-        <div className="flex items-center gap-2">
+        {/* Right: Connect NEAR CTA */}
+        <div className="flex items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => void refreshChainData()}
+            className="hidden sm:inline-flex items-center justify-center rounded-full border border-[#102A1F]/15 p-2 text-[#102A1F] hover:bg-[#102A1F]/5 transition-colors cursor-pointer"
+            title="Refresh NEAR Testnet RPC state"
+            aria-label="Refresh NEAR Testnet RPC state"
+          >
+            <RefreshCw
+              className={cn("h-3.5 w-3.5", isLoadingChain && "animate-spin")}
+            />
+          </button>
+
           {accountId ? (
-            <div className="flex items-center gap-1.5 rounded-xl border border-[#1B4332]/20 bg-white px-3 py-1.5 shadow-2xs">
-              <span className="h-2 w-2 rounded-full bg-[#40916C]" />
-              <span className="font-mono text-xs font-semibold text-[#1B4332] max-w-[150px] truncate">
+            <div className="flex items-center gap-2 rounded-full border border-[#102A1F]/20 bg-white px-3.5 py-1.5">
+              <span className="h-2 w-2 rounded-full bg-[#6F8F45]" />
+              <span className="font-mono text-xs font-semibold text-[#102A1F] max-w-[140px] truncate">
                 {accountId}
               </span>
               <button
                 type="button"
                 onClick={disconnectWallet}
-                className="ml-1 rounded-md p-1 text-[#525B56] hover:bg-red-50 hover:text-[#B91C1C] cursor-pointer"
-                title="Disconnect wallet"
+                className="rounded-full p-1 text-[#18211C]/60 hover:bg-red-50 hover:text-red-800 transition-colors cursor-pointer"
+                title="Disconnect NEAR wallet"
+                aria-label="Disconnect NEAR wallet"
               >
                 <LogOut className="h-3.5 w-3.5" />
               </button>
             </div>
           ) : (
-            <Button
+            <button
               type="button"
-              size="sm"
-              variant="primary"
               onClick={openWalletModal}
+              className="group inline-flex items-center gap-2 rounded-full bg-[#102A1F] px-4 py-2 text-xs font-semibold tracking-wide text-[#F5F2E9] hover:bg-[#0C1712] transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
             >
-              <Wallet className="h-4 w-4" />
-              Connect NEAR Testnet
-            </Button>
+              <span>Connect NEAR</span>
+              <ArrowUpRight className="h-3.5 w-3.5 text-[#C7F36B] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </button>
           )}
 
           <button
             type="button"
             onClick={() => setMobileMenuOpen((v) => !v)}
-            className="lg:hidden rounded-xl border border-[#1B4332]/20 p-2 text-[#1B4332]"
+            className="lg:hidden inline-flex items-center justify-center rounded-full border border-[#102A1F]/20 p-2 text-[#102A1F]"
             aria-label="Toggle navigation menu"
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? (
               <X className="h-5 w-5" />
@@ -195,34 +199,56 @@ export function Navbar() {
         </div>
       </div>
 
+      {/* Deliberate Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-[#1B4332]/15 bg-[#FAF8F5] px-4 py-3 space-y-1">
-          {NAV_LINKS.map((item) => {
-            const isActive =
-              item.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={cn(
-                  "block rounded-xl px-3.5 py-2.5 text-sm font-medium",
-                  isActive
-                    ? "bg-[#1B4332] text-[#FAF8F5]"
-                    : "text-[#1C1F1E] hover:bg-[#D8F3DC]/60"
-                )}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-          <div className="pt-2 border-t border-[#1B4332]/10 text-[11px] text-[#525B56] flex items-center gap-1.5">
-            <AlertCircle className="h-3.5 w-3.5 text-[#1B4332]" />
+        <div className="lg:hidden border-t border-[#102A1F]/15 bg-[#F5F2E9] px-5 py-6 space-y-5">
+          <div className="space-y-2">
+            <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#18211C]/50">
+              Experience
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {PRIMARY_NAV.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-xl border border-[#102A1F]/12 bg-white/70 px-3.5 py-2.5 text-sm font-semibold text-[#102A1F]"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#18211C]/50">
+              Application Portals
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {APP_ROUTES.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-xl border border-[#102A1F]/15 bg-[#102A1F]/5 px-3 py-2 text-center font-mono text-xs font-semibold text-[#102A1F]"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between border-t border-[#102A1F]/10 pt-4 font-mono text-[11px] text-[#18211C]/70">
             <span>
-              All donated NEAR is held in the contract treasury (HELD_IN_TREASURY).
+              State: {isUsingDemoData ? "DEMO DATA PREVIEW" : "LIVE ON-CHAIN"}
             </span>
+            <button
+              type="button"
+              onClick={() => toggleDemoPreviewMode(!isUsingDemoData)}
+              className="underline font-semibold text-[#102A1F]"
+            >
+              {isUsingDemoData ? "Try Live RPC" : "Use Demo Preview"}
+            </button>
           </div>
         </div>
       )}
