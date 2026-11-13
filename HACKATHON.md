@@ -1,40 +1,59 @@
-# NEAR Hackathon 2026 — FoodSort Official Specification
+# NEAR Hackathon 2026 — FoodSort Official Specification & Positioning
 
-## Track & Theme
-**Sustainability, On-Chain Provenance & Verifiable Patronage on NEAR Protocol**
+## 1. Final Project Positioning
 
-FoodSort is an environmental action verification and patronage platform built on **NEAR Protocol (Testnet)** for the NEAR Hackathon 2026. It connects grassroots food-sorting contributors, human verifiers (assisted by an advisory-only off-chain AI verification assistant), and environmental patrons/donors using native NEAR and **NEP-171 / NEP-177 Non-Fungible Tokens**.
+- **Product**: FoodSort
+- **Tagline**: *Sort food. Support change. Collect impact.*
+- **One-line Description**: FoodSort is a community-powered food impact platform that connects verified real-world food actions with transparent on-chain donations and Donation NFTs.
+- **Repository**: [https://github.com/TioEnth06/foodsort.git](https://github.com/TioEnth06/foodsort.git)
+- **Live Demo URL**: `[INSERT LIVE DEMO URL]`
+- **Demo Video URL**: `[INSERT DEMO VIDEO URL]`
+- **NEAR Testnet Contract Address**: `[INSERT ACTUAL CONTRACT ADDRESS]` (configured default in code: `foodsort.testnet`)
 
 ---
 
-## Core Hackathon Rules & Non-Negotiable Guardrails
+## 2. Core End-to-End Flow
+
+```text
+Contributor
+  → Food Action + Evidence
+  → AI-Assisted Verification
+  → Human Admin Approval
+  → NEAR On-Chain Verification
+  → Donor Contribution
+  → Donation NFT
+  → Public Verification
+```
+
+### Important Distinction
+- **AI assists verification** by analyzing untrusted activity descriptions, submitted categories (`COMPOST`, `FOOD_RESCUE`, `RESIDUAL`), and evidence images off-chain (`POST /api/ai/verify`) and returning a structured recommendation (`APPROVE`, `REJECT`, `NEEDS_REVIEW`) with `requires_human_approval: true`.
+- **Human admin makes the final verification decision** via an explicit confirmation step on `/admin`, and can follow or override the AI recommendation. AI recommendations and human admin decisions are logged separately (`POST /api/ai/audit-log`).
+- **The smart contract enforces authorization and records the verified state on-chain** via `verify_action(action_id)` and `reject_action(action_id, reason)` guarded by `assert_admin()`.
+
+---
+
+## 3. Non-Negotiable Product & Security Guardrails
 
 1. **Contributor Attribution Integrity**
    - Contributors submit real-world food-sorting actions (`COMPOST`, `FOOD_RESCUE`, `RESIDUAL`) with off-chain IPFS evidence (`ipfs://...` via Pinata).
-   - When a donor supports a verified action via `donate_and_mint`, the minted Donation NFT **must** permanently record the original `contributor_id` read directly from the verified action in contract storage.
-   - The contract must **never** accept contributor attribution from frontend parameters during donation.
-   - The donor must **never** be presented as the person who performed the physical food-sorting contribution.
+   - When a donor supports a verified action via `donate_and_mint(action_id)`, the minted Donation NFT permanently records the original `contributor_id` read directly from the verified action in contract storage (`self.actions.get(&action_id)`).
+   - The contract never accepts contributor attribution from frontend parameters during donation.
+   - The donor is never presented as the person who performed the physical food-sorting contribution.
 
-2. **Transparent Contract Treasury Accounting**
+2. **Transparent Contract Treasury Accounting (`Funds Held` vs. `Funds Distributed`)**
    - Donors attach native NEAR to support verified actions.
-   - The smart contract strictly separates NEP-171 / state storage byte costs (`storage_cost_yocto`) from the net environmental patronage amount (`net_treasury_amount_yocto`) using checked arithmetic.
-   - All net donation funds remain transparently held in the contract treasury (`treasury_status: "HELD_IN_TREASURY"`).
-   - **Truthfulness Rule**: Neither the smart contract nor the frontend may ever claim or mark that donation funds have been distributed when they remain held in the contract treasury.
+   - The smart contract strictly separates NEP-171 / state storage byte costs (`storage_cost_yocto`) from the net environmental patronage amount (`net_treasury_amount_yocto`) using checked `u128` arithmetic.
+   - All net donation funds remain transparently held in the contract treasury (`treasury_status: "HELD_IN_TREASURY"`, `funds_distributed_yocto: "0"`).
+   - **Truthfulness Rule**: Neither the smart contract nor the frontend ever claims or marks that donation funds have been distributed when no on-chain disbursement transaction exists.
 
-3. **Distinguishing Roles in NFT Provenance**
-   - Every Donation NFT verification view must clearly distinguish three distinct on-chain accounts:
+3. **Distinguishing Roles in NFT Provenance (`Contributor ≠ Original Donor ≠ Current NFT Owner`)**
+   - Every Donation NFT verification view (`/verify` and `/verify/[tokenId]`) clearly distinguishes three distinct on-chain accounts:
      1. **Original Contributor (`contributor_id`)**: Performed and documented the food-sorting action.
      2. **Original Patron / Donor (`donor_id`)**: Contributed native NEAR to the treasury and received the initial Donation NFT.
-     3. **Current NFT Owner (`owner_id`)**: Current NEP-171 holder of the NFT (which may change if transferred via `nft_transfer`).
+     3. **Current NFT Owner (`owner_id`)**: Current NEP-171 holder of the NFT (which updates if transferred via `nft_transfer` without altering `original_donor_id` or `original_contributor_id`).
 
-4. **Advisory-Only AI Verification Assistant (Human-in-the-Loop)**
-   - The Admin Dashboard includes an isolated AI Verification Assistant that evaluates submitted evidence images, food categories (`COMPOST`, `FOOD_RESCUE`, `RESIDUAL`), and descriptions.
-   - AI has **zero access** to admin wallets, private keys, or contract signing capabilities.
-   - AI never claims to certify food safety or independently prove physical activity occurred solely from an image.
-   - Human admin retains 100% final authority and must explicitly confirm before signing `verify_action` or `reject_action` on-chain.
-
-5. **Strict MVP Boundaries (Anti-Bloat Policy)**
-   - Do **not** build:
+4. **Strict MVP Boundaries (Anti-Bloat Policy)**
+   - FoodSort intentionally does **not** include:
      - Secondary NFT marketplace or bidding engine
      - DAO voting or governance token
      - Autonomous AI on-chain auto-execution

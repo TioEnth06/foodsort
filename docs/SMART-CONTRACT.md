@@ -90,6 +90,8 @@ Each minted Donation NFT (`token_id = "foodsort-donation-{donation_id}"`) includ
 | JSON Field | Type | Description |
 | :--- | :--- | :--- |
 | `schema_version` | `String` | `"foodsort-nft-v1"` |
+| `token_id` | `String` | NEP-171 token ID (`"foodsort-donation-{donation_id}"`) |
+| `network` | `String` | NEAR network identifier (`"testnet"` or `"mainnet"`) |
 | `action_id` | `u64` | Linked verified `FoodAction` ID |
 | `donation_id` | `u64` | Linked `DonationRecord` ID |
 | `original_contributor_id` | `AccountId` | Account that performed the physical food-sorting action (immutable) |

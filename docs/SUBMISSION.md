@@ -1,57 +1,106 @@
-# NEAR Hackathon 2026 — Official Submission Package (FoodSort)
+# NEAR Hackathon 2026 — Final Submission Package (FoodSort)
 
-## 1. Basic Project Information
-
-- **Project Name**: FoodSort
-- **Tagline**: Verifiable Food-Sorting Action Registry & Attribution-Preserving NEP-171 Patronage Protocol on NEAR
-- **Hackathon Track**: Sustainability, On-Chain Provenance & Verifiable Impact Patronage (NEAR Hackathon 2026)
-- **GitHub Repository**: [https://github.com/TioEnth06/foodsort.git](https://github.com/TioEnth06/foodsort.git)
-- **Target NEAR Network**: NEAR Testnet (`testnet`)
-- **Smart Contract Account ID**: `foodsort.testnet`
-- **Implemented NEP Standards**: NEP-171 (NFT Core), NEP-177 (NFT Metadata), NEP-181 (NFT Enumeration)
+This document contains the complete, fact-checked submission materials for **FoodSort**, derived strictly from the repository implementation. Placeholders (`[INSERT ...]`) are provided wherever deployment-specific URLs or live transaction hashes must be filled in by the presenter.
 
 ---
 
-## 2. Problem & Solution Summary
+## 1. Project Identity & Positioning
 
-### The Problem
-1. **Unverified Environmental Claims**: Community food waste diversion (`COMPOST`), surplus recovery (`FOOD_RESCUE`), and contamination separation (`RESIDUAL`) lack tamper-resistant proof of execution.
-2. **Broken Attribution in Web3 Patronage**: Existing impact NFT platforms routinely conflate the financial donor or secondary NFT buyer with the person who performed the physical environmental labor.
-3. **Untruthful Payout Claims**: Applications often claim or imply that donated funds have been disbursed when they are actually still held in a treasury contract.
-4. **Manual Verification Bottlenecks**: Human administrators reviewing evidence photos and descriptions need structured triage assistance without surrendering on-chain signing authority or private keys to automated AI bots.
-
-### The FoodSort Solution
-- **Contributors** upload food-sorting evidence images to IPFS via Pinata (`/api/upload`) and submit on-chain actions (`submit_action`) across three standardized categories: `COMPOST`, `FOOD_RESCUE`, and `RESIDUAL`.
-- **Human Admins (Assisted by an Isolated AI Verification Assistant)** inspect pending actions on `/admin`. The server-side AI service (`/api/ai/verify`) analyzes untrusted descriptions and images to return a structured recommendation (`APPROVE`, `REJECT`, `NEEDS_REVIEW`), confidence score, category match, evidence relevance, description consistency, and risk flags. The AI has **zero wallet access** and never claims to certify food safety. The human admin explicitly confirms before signing `verify_action` or `reject_action` on NEAR Testnet, and AI recommendations vs. human decisions are logged separately (`/api/ai/audit-log`).
-- **Donors** support verified actions with native NEAR via `donate_and_mint(action_id)`. The Rust contract measures exact storage byte usage, deducts `storage_cost_yocto` using checked arithmetic, holds `net_treasury_amount_yocto` transparently in the contract treasury (`HELD_IN_TREASURY`), and mints a 1-of-1 NEP-171 Patronage NFT to the donor.
-- **Public Verifiers** can inspect any minted NFT on `/verify` without connecting a wallet. The contract's `get_nft_verification_proof` view explicitly distinguishes three separate accounts:
-  1. **Original Contributor (`contributor_id`)** — Performed the food-sorting action.
-  2. **Original Donor (`donor_id`)** — Contributed native NEAR and minted the NFT.
-  3. **Current NFT Owner (`owner_id`)** — Current NEP-171 holder.
+- **Product Name**: FoodSort
+- **Tagline**: Sort food. Support change. Collect impact.
+- **One-line Description**: FoodSort is a community-powered food impact platform that connects verified real-world food actions with transparent on-chain donations and Donation NFTs.
+- **Hackathon Track**: Sustainability, On-Chain Provenance & AI-Assisted Impact Verification on NEAR Protocol
+- **GitHub Repository URL**: `https://github.com/TioEnth06/foodsort.git`
+- **Live Frontend Demo URL**: `[INSERT LIVE DEMO URL]`
+- **Demo Walkthrough Video URL**: `[INSERT DEMO VIDEO URL]`
+- **NEAR Network**: NEAR Testnet (`testnet`)
+- **Deployed Smart Contract Address**: `[INSERT ACTUAL CONTRACT ADDRESS]` (default configured in `frontend/.env.example`: `foodsort.testnet`)
+- **Sample Verified Action Transaction Hash**: `[INSERT ACTUAL SUBMIT/VERIFY TX HASH]`
+- **Sample `donate_and_mint` Transaction Hash**: `[INSERT ACTUAL DONATE_AND_MINT TX HASH]`
 
 ---
 
-## 3. Technical Architecture & Smart Contract Security Highlights
+## 2. Core End-to-End Flow
 
-| Requirement | Implementation in FoodSort |
-| :--- | :--- |
-| **Smart Contract Stack** | Rust (`near-sdk = "5.5.0"`, `near-contract-standards = "5.5.0"`, NEP-171, NEP-177, NEP-181) in `contract/src/lib.rs` |
-| **Frontend Stack** | Next.js 15 App Router, TypeScript, Tailwind CSS v4, `shadcn/ui`, `motion` animations in `frontend/` |
-| **Off-Chain Storage** | Strict Pinata IPFS pinning (`POST /api/upload`) validating MIME types (`JPEG`, `PNG`, `WEBP`) and 10 MB limit |
-| **Admin Access Control** | Contract-enforced `require!(env::predecessor_account_id() == self.admin_id, "ERR_NOT_ADMIN")` |
-| **Unverified Donation Guard** | Contract-enforced `require!(action.status == ActionStatus::Verified, "ERR_ACTION_NOT_VERIFIED")` |
-| **Immutable Attribution** | `donate_and_mint` reads `contributor_id` exclusively from `self.actions.get(&action_id)` in contract storage |
-| **Storage vs. Treasury Isolation** | Checked arithmetic (`checked_sub`, `checked_add`) separates `storage_cost_yocto` from `net_treasury_amount_yocto` |
-| **Honest Treasury Status** | All donation records and NFT metadata explicitly record `treasury_status: "HELD_IN_TREASURY"` |
-| **AI Assistant Isolation** | Server-side `/api/ai/verify` treats inputs as untrusted, enforces `requires_human_approval: true`, and logs separately in `/api/ai/audit-log` |
+```text
+Contributor
+→ Food Action + Evidence
+→ AI-Assisted Verification
+→ Human Admin Approval
+→ NEAR On-Chain Verification
+→ Donor Contribution
+→ Donation NFT
+→ Public Verification
+```
+
+1. **Contributor Submits Food Action + Evidence (`/contribute`)**:
+   - Connects a NEAR Testnet wallet.
+   - Selects one of the three supported categories (`COMPOST`, `FOOD_RESCUE`, `RESIDUAL`), specifies an action type, writes an activity description, and uploads photographic evidence.
+   - The evidence image is validated and pinned off-chain to IPFS via Pinata (`POST /api/upload`), returning `ipfs://<CID>`.
+   - Calls `submit_action(food_category, action_type, description, evidence_uri)` on the NEAR smart contract, storing the action with `status: Pending` and `contributor_id = env::predecessor_account_id()`.
+2. **AI-Assisted Verification (`/admin` -> `POST /api/ai/verify`)**:
+   - The human admin opens `/admin` and clicks **"Run AI Evidence Analysis"** on a pending submission.
+   - The server-side AI service analyzes the untrusted description, submitted category (`COMPOST`, `FOOD_RESCUE`, `RESIDUAL`), and evidence image, returning a structured JSON evaluation:
+     - `recommendation`: `"APPROVE"` | `"REJECT"` | `"NEEDS_REVIEW"`
+     - `confidence_score`: `0.0` to `1.0`
+     - `category_assessment`, `evidence_relevance`, `description_consistency`, `risk_flags`, `reasoning`
+     - `requires_human_approval`: `true` (hardcoded invariant)
+   - **Important Distinction**: AI assists verification; it never certifies food safety, has zero access to admin wallets or private keys, and cannot execute blockchain transactions.
+3. **Human Admin Approval & NEAR On-Chain Verification (`/admin`)**:
+   - The human administrator reviews the evidence and AI assessment, then chooses **Approve**, **Reject**, or **Request Additional Evidence**.
+   - An explicit confirmation modal displays the prior AI recommendation alongside the admin's decision before invoking the wallet.
+   - The smart contract enforces `assert_admin()` (`env::predecessor_account_id() == self.admin_id`) and records `Verified` or `Rejected` on-chain (`verify_action` / `reject_action`).
+   - AI recommendations and human admin decisions are logged separately via `POST /api/ai/audit-log`.
+4. **Donor Contribution & Donation NFT Minting (`/actions/[id]`)**:
+   - Donors browse `/actions` and select a `Verified` action (`Pending` and `Rejected` actions are rejected by the contract with `ERR_ACTION_NOT_VERIFIED`).
+   - Donor attaches native NEAR and calls `donate_and_mint(action_id)`.
+   - The contract measures exact storage byte usage (`env::storage_usage()`), deducts `storage_cost_yocto` from the attached deposit using checked `u128` arithmetic, records `net_treasury_amount_yocto` in the contract treasury (`treasury_status: "HELD_IN_TREASURY"`), and mints NEP-171 token `foodsort-donation-{donation_id}` to the donor.
+   - The NFT metadata (`DonationNftExtraMetadata`) permanently locks `original_contributor_id` read directly from the verified action stored on-chain.
+5. **NFT Gallery & Walletless Public Verification (`/donor`, `/verify`, `/verify/[tokenId]`)**:
+   - Donors inspect their owned certificates and donation ledger on `/donor`.
+   - Any member of the public—without connecting a wallet—can open `/verify` or `/verify/[tokenId]` to query `get_nft_verification_proof(token_id)` on NEAR Testnet RPC and verify:
+     - `original_contributor_id` (Action Performer)
+     - `original_donor_id` (Original Patron)
+     - `current_owner_id` (Current NEP-171 Holder)
+     - `gross_attached_yocto`, `storage_cost_yocto`, `net_treasury_amount_yocto`, and `treasury_status: "HELD_IN_TREASURY"` (`Funds Distributed: 0 NEAR`).
 
 ---
 
-## 4. Final Pre-Submission Verification Checklist
+## 3. Long-Form Hackathon Portal Description (Copy-Paste Ready)
 
-- [x] `HACKATHON.md`, `README.md`, `AGENTS.md`, and all `docs/*.md` files present and up to date
-- [x] All 7 pages implemented and navigable (`/`, `/actions`, `/actions/[id]`, `/contribute`, `/donor`, `/admin`, `/verify`)
-- [x] Isolated AI Verification Assistant (`Prompt #6.5`) integrated into `/admin` with human confirmation modal and manual fallback
-- [x] Automated release test suite (`node scripts/run-release-tests.mjs`) passes 100%
-- [x] Next.js production build (`npm run build`) and TypeScript check (`npm run typecheck`) pass with zero errors
-- [x] No `.env` or secret keys committed to Git history
+### Problem
+Community-level food sorting—diverting organic scraps to compost (`COMPOST`), recovering edible surplus before spoilage (`FOOD_RESCUE`), and isolating contaminated waste (`RESIDUAL`)—is one of the highest-leverage climate actions available. Yet grassroots contributors struggle to receive transparent patronage because:
+1. **Unverified Impact Claims**: Photos and descriptions lack structured, tamper-resistant verification.
+2. **Broken Attribution in Web3 Impact NFTs**: Many patronage platforms conflate the financial donor (or secondary NFT holder) with the person who performed the physical environmental labor.
+3. **Misleading Payout Claims**: Platforms frequently imply donated funds have been distributed when they remain sitting in an escrow or treasury contract.
+4. **Verification Bottlenecks vs. Blind Automation**: Human reviewers need fast triage assistance, but handing smart-contract signing keys to autonomous AI agents introduces severe security and prompt-injection risks.
+
+### Solution: FoodSort on NEAR
+**FoodSort** (*Sort food. Support change. Collect impact.*) solves these four problems on NEAR Protocol:
+- **On-Chain Action Registry & Off-Chain IPFS Evidence**: Contributors pin evidence images to IPFS via Pinata and register actions on NEAR Testnet (`submit_action`).
+- **Advisory AI Verification + Human Authority**: Our isolated AI Verification Assistant (`/api/ai/verify`) evaluates untrusted descriptions and images for category consistency and risk flags (`requires_human_approval: true`), while human administrators retain 100% signing authority and contract-enforced access control (`assert_admin()`).
+- **Attribution-Preserving NEP-171 / NEP-177 Donation NFTs**: When a donor calls `donate_and_mint(action_id)`, the Rust smart contract reads `contributor_id` from verified on-chain state and embeds it into both the `DonationRecord` and NEP-177 `TokenMetadata.extra` JSON.
+- **Transparent Treasury Accounting**: Checked `u128` arithmetic separates NEP-171 storage byte costs from net donations, and both the contract and UI clearly distinguish `Funds Held in Contract Treasury` (`HELD_IN_TREASURY`) from `Funds Distributed` (`0 NEAR` in the MVP).
+- **Walletless Public Verification**: Anyone can visit `/verify/[tokenId]` without connecting a wallet to verify the three-party provenance (`Original Contributor ≠ Original Donor ≠ Current NFT Owner`).
+
+---
+
+## 4. Technical Stack & Actual Repository Map
+
+| Layer | Technology Used in Repository | Key Files |
+| :--- | :--- | :--- |
+| **Smart Contract** | Rust (`near-sdk = "5.5.0"`, `near-contract-standards = "5.5.0"`, NEP-171, NEP-177, NEP-181) | `contract/Cargo.toml`, `contract/src/lib.rs`, `contract/src/models.rs`, `contract/src/views.rs` |
+| **Frontend Framework** | Next.js 15.2.4 (App Router), React 19, TypeScript 5.8.2, Tailwind CSS v4, `motion`, `lucide-react` | `frontend/package.json`, `frontend/src/app/*`, `frontend/src/components/*` |
+| **NEAR Integration** | Direct JSON-RPC view client (`callNearView`, `fetchTransactionOutcome`) + Testnet Wallet integration | `frontend/src/lib/near/config.ts`, `frontend/src/lib/near/rpc.ts`, `frontend/src/lib/near/wallet-provider.tsx` |
+| **IPFS Storage** | Server-side Pinata `pinFileToIPFS` route with MIME & 10 MB validation | `frontend/src/app/api/upload/route.ts` |
+| **AI Verification Assistant** | Server-side OpenAI / Gemini Vision route + schema normalizer + separate AI vs. Human audit log | `frontend/src/app/api/ai/verify/route.ts`, `frontend/src/lib/ai/verification-schema.ts`, `frontend/src/app/api/ai/audit-log/route.ts` |
+| **Testing & Release** | Contract state-machine & static invariant suite + E2E QA runner + NEAR Testnet deploy script | `contract/tests/verify-contract-invariants.mjs`, `scripts/run-release-tests.mjs`, `scripts/deploy-near-testnet.sh` |
+
+---
+
+## 5. Honest Disclosure of Demo Data vs. Live On-Chain Mode
+
+To ensure judges can evaluate FoodSort immediately even before connecting external API keys or a funded Testnet wallet:
+- **Demo Preview Mode (`DEMO DATA PREVIEW`)**: When the target contract is not yet deployed or when Demo Preview is toggled in the top banner, the UI displays 5 sample actions (`#101`–`#105`), 3 sample donations (`#1`–`#3`), and 3 sample NEP-171 tokens (`foodsort-donation-1`–`3`, where `foodsort-donation-2` demonstrates a token transferred to `impact-collector.testnet`). Every sample record is explicitly badged with `DEMO DATA`.
+- **Zero Fake Transactions**: Attempting to sign a write transaction (`submit_action`, `verify_action`, `reject_action`, `donate_and_mint`) never fabricates a transaction hash; it requires a real NEAR Testnet contract and wallet signature.
+- **No Fabricated AI Output**: If `OPENAI_API_KEY` / `GEMINI_API_KEY` is not set on the server, clicking **"Run AI Evidence Analysis"** returns an honest `503 AI_SERVICE_UNAVAILABLE` notice and keeps manual human verification active.
