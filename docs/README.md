@@ -11,7 +11,6 @@
 | [SMART-CONTRACT.md](./SMART-CONTRACT.md) | Rust contract & NFT metadata |
 | [UI-UX.md](./UI-UX.md) | Design system & page map |
 | [TESTING.md](./TESTING.md) | Test matrix & security notes |
-| [submission/](./submission/) | Hackathon screenshots + X carousel + report |
 
 Root companions: [`README.md`](../README.md), [`HACKATHON.md`](../HACKATHON.md), [`AGENTS.md`](../AGENTS.md).
 
