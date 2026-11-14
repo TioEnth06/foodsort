@@ -5,7 +5,7 @@
 | Item | Value |
 | --- | --- |
 | Network | NEAR Testnet |
-| RPC | `https://rpc.testnet.near.org` (or FastNear) |
+| RPC | `https://rpc.testnet.fastnear.com` |
 | Contract / admin | `foodsort-app-86051.testnet` |
 | Seeded contributor / donor | `foodsort-contrib-6146.testnet` |
 | App | Next.js 15.5 (root `src/`), React 19, TypeScript 5.8 |
@@ -27,7 +27,7 @@ Example-data fixtures (`sari-organik.testnet`, `green-patron.testnet`, …) appe
 ```bash
 NEXT_PUBLIC_NEAR_NETWORK=testnet
 NEXT_PUBLIC_CONTRACT_ID=foodsort-app-86051.testnet
-NEXT_PUBLIC_NEAR_RPC_URL=https://rpc.testnet.near.org
+NEXT_PUBLIC_NEAR_RPC_URL=https://rpc.testnet.fastnear.com
 NEXT_PUBLIC_NEAR_EXPLORER_URL=https://testnet.nearblocks.io
 PINATA_JWT=
 AI_PROVIDER=gemini

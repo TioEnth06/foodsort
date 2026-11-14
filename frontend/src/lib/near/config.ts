@@ -4,7 +4,8 @@ export const NEAR_CONFIG = {
   contractId:
     process.env.NEXT_PUBLIC_CONTRACT_ID || "foodsort-app-86051.testnet",
   nodeUrl:
-    process.env.NEXT_PUBLIC_NEAR_RPC_URL || "https://rpc.testnet.near.org",
+    process.env.NEXT_PUBLIC_NEAR_RPC_URL ||
+    "https://rpc.testnet.fastnear.com",
   walletUrl:
     process.env.NEXT_PUBLIC_NEAR_WALLET_URL ||
     "https://testnet.mynearwallet.com",
